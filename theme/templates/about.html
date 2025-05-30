@@ -1,0 +1,15 @@
+{% extends "page.html" %}
+
+{% block description %}{{page.content|striptags|truncate(200)|escape }}{% endblock description %}
+
+{%block page %}
+  <h1 class="page-heading">
+    We empower forward-looking teams through engineering intelligence that scales.
+  </h1>
+  <div class="arrow-container">
+    <h2 class="arrow">></h2>
+    <h2>
+      LucidBox Engineering & Consulting Ltd. was founded by four partners with a shared vision: to build an engineering firm that merges technical excellence with forward-thinking creativity.
+    </h2>
+  </div>
+{% endblock %}

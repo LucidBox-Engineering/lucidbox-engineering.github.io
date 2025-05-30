@@ -1,0 +1,21 @@
+{% extends "nav_base.html" %}
+
+{% block title %}{{ author }} - {{ super() }}{% endblock title %}
+{% block description %}{{ author }}'s Posts{% endblock description %}
+
+{% block section %}
+{% for author, articles in authors|sort %}
+  <h2><a href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a></h2>
+  {% for article in articles %}
+    <dl class="page-list-item">
+      <dt>
+        <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a> - 
+        <small>{{ article.locale_date}}</small>
+      </dt>
+      <dd>
+        {{ article.summary }}
+      </dd>
+    </dl>
+  {% endfor %}
+{% endfor %}
+{% endblock section %}

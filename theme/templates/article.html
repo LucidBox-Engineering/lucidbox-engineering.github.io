@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.title }} - {{ super() }}{% endblock title %}
+{% block description %}{% if article.summary %}{{ article.summary|striptags }}{% else %}{{ article.content|striptags|truncate(200)|escape }}{% endif %}{% endblock description %}
+{% block keywords %}{{ article.keywords }}, {% for tag in article.tags|sort %}{{ tag }}{% if not loop.last %}, {% endif %}{% endfor %}{% endblock keywords %}
+{% block custom_css %}{{ article.metadata.custom_css }}{% endblock custom_css %}
+
+
+{% block content %}
+<header class="article-title">
+  <nav>
+	  / <a href="{{ SITEURL }}/">home</a> / {{ article.title }}
+  </nav>
+</header>
+
+<article>
+	<section class="article-date">{{ article.locale_date }}{% if article.modified %}, updated {{ article.locale_modified }}{% endif %}
+	</section>
+	{{ article.content }}
+</article>
+{% endblock %}
