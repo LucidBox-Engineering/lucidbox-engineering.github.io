@@ -67,7 +67,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2em 4em;
+  padding: 1em 4em;
   position: fixed;
   width: 100%;
   z-index: 1000;
@@ -84,6 +84,10 @@ h1 {
   position: relative;
   top: 0;
   left: 0;
+}
+
+.lockup svg {
+  display: block;
 }
 
 .navbar nav {
