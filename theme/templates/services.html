@@ -1,0 +1,109 @@
+{% extends "page.html" %}
+
+{% block description %}{{ "We build scalable software and electrical systems for connected devices, smart infrastructure, and technical product development." }}{% endblock description %}
+
+{%block page %}
+  <h1 class="page-heading">
+    We build scalable software and electrical systems for connected devices, smart infrastructure, and technical product development.
+  </h1>
+  <div class="arrow-container">
+    <h2 class="arrow">></h2>
+    <div>
+      <h2>
+        Software Engineering
+      </h2>
+      <p>
+        We design and build robust software systems, from frontend interfaces to backend infrastructure
+      </p>
+    </div>
+  </div>
+
+  <div class="service-cards">
+    <div class="service-card">
+      {% include "svg/hugeicons_ai-cloud-02.svg" %}
+      <h3>Cloud Architecture</h3>
+      <p>Secure, scalable backends</p>
+    </div>
+    <div class="service-card">
+      {% include "svg/hugeicons_workflow-square-01.svg" %}
+      <h3>DevOps</h3>
+      <p>Streamlined testing and deployment</p>
+    </div>
+    <div class="service-card">
+      {% include "svg/hugeicons_web-design-02.svg" %}
+      <h3>Full-Stack Web Development</h3>
+      <p>Intuitive, performant apps</p>
+    </div>
+    <div class="service-card">
+      {% include "svg/hugeicons_internet-antenna-02.svg" %}
+      <h3>Distributed Systems & IoT</h3>
+      <p>Edge devices and networked platforms</p>
+    </div>
+    <div class="service-card">
+      {% include "svg/phone-dev-mode.svg" %}
+      <h3>Firmware & Embedded Software</h3>
+      <p>Intuitive, performant apps</p>
+    </div>
+    <div class="service-card">
+      {% include "svg/hugeicons_chart-line-data-02.svg" %}
+      <h3>AI, ML & Data Systems</h3>
+      <p>Intelligent, data-driven tools</p>
+    </div>
+  </div>
+
+  <div class="arrow-container">
+    <h2 class="arrow">></h2>
+    <div>
+      <h2>
+        Electrical Engineering
+      </h2>
+      <p>
+        We offer full-cycle electrical development
+      </p>
+    </div>
+  </div>
+
+  <div class="service-cards">
+    <div class="service-card">
+      {% include "svg/lucide_circuit-board.svg" %}
+      <h3>Circuit & PCB Design</h3>
+      <p>From prototype to production</p>
+    </div>
+    <div class="service-card">
+      {% include "svg/lucide_microchip.svg" %}
+      <h3>Microcontroller-Based Systems</h3>
+      <p>Smart control and communication</p>
+    </div>
+    <div class="service-card">
+      {% include "svg/lucide_shield-check.svg" %}
+      <h3>Product Electrical Design</h3>
+      <p>Architecture and certification guidance</p>
+    </div>
+  </div>
+
+  <div class="landing-about service-industries">
+    <h2 class="service-industries">
+      > Industries We Serve
+    </h2>
+    <div class="card-box">
+      <div class="card">
+        <h2>Clean-Tech & Renewables</h2>
+        <p>
+          DERMS, VPPs, solar integration
+        </p>
+      </div>
+      <div class="card">
+        <h2>Energy Storage & Controls</h2>
+        <p>
+          Battery systems and control software
+        </p>
+      </div>
+      <div class="card">
+        <h2>Industrial IoT</h2>
+        <p>
+          Monitoring, diagnostics, and automation
+        </p>
+      </div>
+    </div>
+  </div>
+{% endblock %}
