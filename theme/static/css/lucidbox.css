@@ -315,7 +315,95 @@ h2.service-industries {
   color: transparent;
   margin-left: 8%;
   margin-right: 15%;
-  padding-bottom: 10rem;
+  padding-bottom: 5rem;
+}
+
+@media (max-width: 768px) {
+  .engagement-card {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .card-left,
+  .card-right {
+    width: 100%;
+    height: auto;
+    padding: 2.5em 2em;
+  }
+
+  .card-left h2 {
+    padding: 1em 0;
+  }
+
+  .engagement-cards {
+    width: 90%;
+  }
+}
+
+/* Engagement Cards Styling */
+.engagement-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 3em;
+  margin: 0 auto;
+  max-width: 1000px;
+  width: 84%;
+  padding-bottom: 4em;
+}
+
+.engagement-card {
+  display: flex;
+  flex-direction: row;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  height: 300px;
+}
+
+.card-left {
+  background-image: var(--primary-gradient);
+  padding: 3em;
+  color: var(--neutral);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+}
+
+.card-left h2 {
+  color: var(--neutral);
+  font-family: var(--secondary-font);
+  margin: 0;
+}
+
+.card-right {
+  background-color: var(--neutral);
+  padding: 3em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 50%;
+}
+
+.card-right p {
+  margin-bottom: 2.5em;
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-start;
+  line-height: 1.6;
+}
+
+.card-link {
+  color: var(--primary-blue);
+  font-family: var(--primary-font);
+  text-decoration: none;
+  font-weight: 500;
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
+
+.card-link:hover {
+  transform: translateX(5px);
 }
 
 /* Contact Form Styling */
