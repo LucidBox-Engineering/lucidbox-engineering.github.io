@@ -67,7 +67,7 @@
             </div>
           </div>
           <div>
-            <span>&copy; {{ SITENAME }} {{ YEAR }}</span>
+            <span>{{ SITENAME }} {{ YEAR }}</span>
           </div>
         </div>
       </div>
@@ -90,7 +90,7 @@
         if (menuCheckbox.checked) {
           return;
         }
-        
+
         if (window.scrollY > 10) { // Apply background after scrolling a bit
           if (isLightTheme) {
             navbar.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
@@ -108,7 +108,7 @@
 
       // Add scroll event listener to change navbar background
       window.addEventListener('scroll', updateNavbarBackground);
-      
+
       // Initial call to set correct state on page load
       updateNavbarBackground();
 
