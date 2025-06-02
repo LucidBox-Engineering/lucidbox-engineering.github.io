@@ -717,7 +717,7 @@ footer textarea {
   margin-bottom: 0;
 }
 
-@media (max-width: 1268px) {
+@media (max-width: 1080px) {
   h1 {
     font-size: 2.5em;
   }
