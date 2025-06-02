@@ -27,6 +27,7 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -48,17 +49,51 @@ h1 {
   line-height: 110%;
 }
 
+/* .navbar {
+  position: sticky;
+  top: 0px;
+  background: url(/images/artboard.webp) no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: 100%;
+  background-clip: border-box;
+  width: 100%;
+  height: 8em;
+  aspect-ratio: 2.016;
+} */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2em 4em;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  background-color: transparent;
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+  transition: all 0.3s ease-in-out;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+}
+
 .navbar .lockup {
-  position: absolute;
-  top: 3em;
-  left: 4em;
+  position: relative;
+  top: 0;
+  left: 0;
 }
 
 .navbar nav {
-  position: absolute;
-  top: 3em;
-  right: 4em;
+  position: relative;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
 }
+
 .navbar nav a {
   font-family: var(--primary-font);
   color: var(--primary-light);
@@ -72,6 +107,61 @@ h1 {
 
 .navbar nav.light-bg a {
   color: var(--primary-dark);
+}
+
+.hamburger {
+  display: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 1001;
+  padding: 1em;
+}
+
+.hamb-line {
+  display: block;
+  background-color: var(--primary-light);
+  height: 2px;
+  width: 24px;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  border-radius: 1px;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.hamburger.light-bg .hamb-line {
+  background-color: var(--primary-dark);
+}
+
+.hamb-line::before,
+.hamb-line::after {
+  content: "";
+  display: block;
+  background-color: var(--primary-light);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  transition: all 0.3s ease-in-out;
+  border-radius: 1px;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.hamburger.light-bg .hamb-line::before,
+.hamburger.light-bg .hamb-line::after {
+  background-color: var(--primary-dark);
+}
+
+.hamb-line::before {
+  top: -6px;
+}
+
+.hamb-line::after {
+  bottom: -6px;
+}
+
+.side-menu {
+  display: none;
 }
 
 /* .navtext:before {
@@ -107,6 +197,7 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
+  padding-top: 0; /* Remove padding as navbar is now fixed */
 }
 
 .landing-artboard h1 {
@@ -115,6 +206,7 @@ h1 {
   grid-row: 2;
   align-self: center;
   justify-self: center;
+  margin-top: 2em; /* Add margin to push content down below navbar */
 }
 
 .landing-artboard div {
@@ -171,6 +263,7 @@ h1 {
   background-clip: content-box;
   background-position-y: top 35%;
   animation: resetScaleBackground 15s infinite ease-in-out;
+  position: relative;
 }
 
 @keyframes resetScaleBackground {
@@ -193,7 +286,6 @@ h2 {
 
 .arrow-container {
   display: flex;
-  align-items: top;
   width: 60%;
   margin-left: 8%;
   padding-top: 4em;
@@ -305,7 +397,9 @@ h2.service-industries {
 
 .page {
   background-color: var(--neutral-alt);
-  padding-top: 15rem;
+  padding-top: 8rem; /* Adjusted to account for navbar */
+  position: relative;
+  margin-top: 0; /* Remove margin as navbar is now fixed */
 }
 
 .service-page {
@@ -319,28 +413,6 @@ h2.service-industries {
   margin-left: 8%;
   margin-right: 15%;
   padding-bottom: 5rem;
-}
-
-@media (max-width: 768px) {
-  .engagement-card {
-    flex-direction: column;
-    height: auto;
-  }
-
-  .card-left,
-  .card-right {
-    width: 100%;
-    height: auto;
-    padding: 2.5em 2em;
-  }
-
-  .card-left h2 {
-    padding: 1em 0;
-  }
-
-  .engagement-cards {
-    width: 90%;
-  }
 }
 
 /* Engagement Cards Styling */
@@ -638,4 +710,201 @@ footer textarea {
   font-family: var(--primary-font);
   line-height: 1.6;
   margin-bottom: 0;
+}
+
+@media (max-width: 1268px) {
+  h1 {
+    font-size: 2.5em;
+  }
+
+  h2 {
+    font-size: 1.2em;
+  }
+
+  .navbar {
+    padding: 1em 2em;
+    position: fixed;
+    transition: all 0.3s ease-in-out;
+    will-change: backdrop-filter, background-color;
+  }
+
+  .navbar nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100vh;
+    background-color: transparent;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2em;
+    transition: all 0.3s ease-in-out;
+    z-index: 1000;
+  }
+
+  .navbar nav.light-bg {
+    background-color: var(--neutral);
+  }
+
+  .side-menu:checked ~ nav.light-bg {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .navbar nav a {
+    margin: 0;
+    font-size: 1.2em;
+    padding: 1em;
+  }
+
+  .hamburger {
+    display: block;
+    z-index: 1002;
+  }
+
+  .side-menu {
+    display: none;
+  }
+
+  .side-menu:checked ~ nav {
+    right: 0;
+    background-color: rgba(
+      14,
+      32,
+      50,
+      0.95
+    ); /* Semi-transparent background when menu is open */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .side-menu:checked ~ .hamburger .hamb-line {
+    background-color: transparent;
+  }
+
+  .side-menu:checked ~ .hamburger .hamb-line::before {
+    transform: rotate(45deg);
+    top: 0;
+  }
+
+  .side-menu:checked ~ .hamburger .hamb-line::after {
+    transform: rotate(-45deg);
+    bottom: 0;
+    top: 0;
+  }
+
+  .side-menu:checked ~ .hamburger .hamb-line::before,
+  .side-menu:checked ~ .hamburger .hamb-line::after {
+    background-color: var(--primary-light);
+  }
+
+  .side-menu:checked ~ .hamburger.light-bg .hamb-line::before,
+  .side-menu:checked ~ .hamburger.light-bg .hamb-line::after {
+    background-color: var(--primary-dark);
+  }
+
+  /* Light theme adjustments */
+  /* This section was redundant and has been removed, as it's already defined above */
+
+  body:has(.side-menu:checked) {
+    overflow: hidden;
+  }
+
+  /* For older browsers that don't support :has */
+  html.menu-open {
+    overflow: hidden;
+  }
+
+  .side-menu:checked ~ .navbar {
+    background-color: transparent;
+  }
+
+  .landing-artboard {
+    grid-template-columns: 1fr;
+    padding-top: 0; /* Remove padding as navbar is fixed */
+  }
+
+  .landing-artboard h1 {
+    grid-column: 1;
+    grid-row: 1;
+    margin-top: 6em; /* Increased to account for navbar on mobile */
+  }
+
+  .landing-artboard div {
+    grid-column: 1;
+    grid-row: 2;
+    padding-left: 2em;
+    padding-right: 2em;
+  }
+
+  .landing-artboard .lucid-button {
+    grid-column: 1;
+    grid-row: 3;
+    text-align: center;
+    /* Hide the background image on mobile, because it might not be pixel-perfect, and isn't used */
+    background-color: var(--accent);
+    background-image: none;
+  }
+
+  .arrow-container {
+    width: 80%;
+  }
+
+  .landing-services .button-container {
+    width: 80%;
+  }
+
+  .lucid-button {
+    display: block;
+    width: 100%;
+  }
+
+  .landing-about .card-box {
+    flex-direction: column;
+  }
+  .card {
+    margin-bottom: 2em;
+    margin-top: 2em;
+  }
+
+  .bio {
+    flex-direction: column;
+  }
+
+  .about-extended {
+    flex-direction: column;
+  }
+
+  .engagement-card {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .service-cards {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .card-left,
+  .card-right {
+    width: 100%;
+    height: auto;
+    padding: 2.5em 2em;
+  }
+
+  .card-left h2 {
+    padding: 1em 0;
+  }
+
+  .engagement-cards {
+    width: 90%;
+  }
+
+  .contact-form,
+  .submit-button {
+    display: none;
+  }
 }
