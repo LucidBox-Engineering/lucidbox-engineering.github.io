@@ -597,6 +597,7 @@ footer textarea {
   flex: 0 0 200px;
   height: 200px;
   overflow: hidden;
+  aspect-ratio: 1 / 1;
 }
 
 .bio-image img {
