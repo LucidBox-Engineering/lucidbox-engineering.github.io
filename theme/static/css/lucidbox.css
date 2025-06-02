@@ -127,7 +127,7 @@ h1 {
   padding-bottom: 2em;
 }
 
-button,
+.lucid-button,
 .submit-button {
   color: var(--primary-dark);
   font-family: var(--primary-font);
@@ -139,22 +139,21 @@ button,
     var(--accent) 50%,
     var(--primary-blue) 0
   );
-  border: none;
+  text-decoration: none;
   padding: 1em 4em;
   transition:
     background-position 0.3s cubic-bezier(0.87, 0, 0.13, 1),
     color 0.3s cubic-bezier(0.87, 0, 0.13, 1);
-  cursor: pointer;
 }
 
-.landing-artboard button {
+.landing-artboard .lucid-button {
   grid-column: 3;
   grid-row: 3;
   align-self: end;
   justify-self: end;
 }
 
-button:hover,
+.lucid-button:hover,
 .submit-button:hover {
   background-position: 0 100%;
   color: var(--neutral);
@@ -252,6 +251,7 @@ p {
   grid-template-columns: repeat(3, 1fr);
   gap: 1em;
   margin: 2em 8%;
+  padding-bottom: 3em;
 }
 
 .service-card {
@@ -458,6 +458,11 @@ footer h1 {
   flex-shrink: 0;
   width: 24px;
   height: 24px;
+}
+
+.contact-item a {
+  color: var(--primary-light);
+  text-decoration: none;
 }
 
 .input-row {

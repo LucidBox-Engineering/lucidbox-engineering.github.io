@@ -44,6 +44,7 @@ YEAR = datetime.now().year
 
 CONTACT_EMAIL = "contact@lucidbox.ca"
 CONTACT_PHONE = "+1 (587) 316 8828"
+CONTACT_PHONE_CLEAN = "+15873168828"
 CONTACT_ADDRESS = "5005 Dalhousie Dr NW 175 #1527 Calgary, AB T3A 5R8"
 
 # Uncomment following line if you want document-relative URLs when developing
