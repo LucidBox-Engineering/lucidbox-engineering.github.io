@@ -305,6 +305,10 @@ h2.service-industries {
   padding-top: 15rem;
 }
 
+.service-page {
+  background-color: var(--neutral);
+}
+
 .page-heading {
   background-image: var(--primary-gradient);
   background-clip: text;
