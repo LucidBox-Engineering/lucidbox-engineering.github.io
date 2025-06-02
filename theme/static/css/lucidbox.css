@@ -140,7 +140,9 @@ h1 {
     var(--primary-blue) 0
   );
   text-decoration: none;
-  padding: 1em 4em;
+  border: none;
+  cursor: pointer;
+  padding: 1em 2em;
   transition:
     background-position 0.3s cubic-bezier(0.87, 0, 0.13, 1),
     color 0.3s cubic-bezier(0.87, 0, 0.13, 1);
@@ -151,6 +153,7 @@ h1 {
   grid-row: 3;
   align-self: end;
   justify-self: end;
+  padding: 1em 4em;
 }
 
 .lucid-button:hover,
@@ -562,7 +565,7 @@ footer textarea {
   display: flex;
   flex-direction: column;
   padding: 2em 8%;
-  padding-top: 10em;
+  padding-top: 4em;
   padding-left: 1em;
 }
 
