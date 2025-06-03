@@ -69,7 +69,8 @@
         </div>
       </div>
       <input type="submit" value="Submit" class="submit-button">
-      <div class="success-message">Thanks for reaching out! We'll get back to you shortly.</div>
+      <div id="success-message" class="success-message">Thanks for reaching out! We'll get back to you shortly.</div>
+      <div id="error-message" class="error-message">Something went wrong. Please try again or contact us at <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>.</div>
     </form>
   </footer>
 
@@ -173,7 +174,8 @@
         })
         .catch(error => {
           console.error('Error:', error);
-          alert('There was an error sending your message. Please try again later.');
+          const errorMessage = document.getElementById('error-message');
+          errorMessage.classList.add('visible');
         });
       });
     });

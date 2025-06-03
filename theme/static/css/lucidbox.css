@@ -577,16 +577,29 @@ footer textarea {
   resize: vertical;
 }
 
-.success-message {
+.success-message,
+.error-message {
   display: none;
-  color: var(--accent);
   margin-top: 1em;
   font-weight: 500;
   transition: opacity 0.3s ease;
   opacity: 0;
 }
 
-.success-message.visible {
+.success-message {
+  color: var(--accent);
+}
+
+.error-message {
+  color: #ff4d4d;
+}
+
+.error-message a {
+  color: #ff4d4d;
+}
+
+.success-message.visible,
+.error-message.visible {
   display: block;
   opacity: 1;
 }
