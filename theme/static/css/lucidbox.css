@@ -400,9 +400,9 @@ h2.service-industries {
 
 .page {
   background-color: var(--neutral-alt);
-  padding-top: 8rem; /* Adjusted to account for navbar */
+  padding-top: 8rem;
   position: relative;
-  margin-top: 0; /* Remove margin as navbar is now fixed */
+  margin-top: 0;
 }
 
 .service-page {
@@ -418,7 +418,6 @@ h2.service-industries {
   padding-bottom: 5rem;
 }
 
-/* Engagement Cards Styling */
 .engagement-cards {
   display: flex;
   flex-direction: column;
@@ -802,12 +801,7 @@ footer textarea {
 
   .side-menu:checked ~ nav {
     right: 0;
-    background-color: rgba(
-      14,
-      32,
-      50,
-      0.95
-    ); /* Semi-transparent background when menu is open */
+    background-color: rgba(14, 32, 50, 0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
@@ -838,9 +832,6 @@ footer textarea {
     background-color: var(--primary-dark);
   }
 
-  /* Light theme adjustments */
-  /* This section was redundant and has been removed, as it's already defined above */
-
   body:has(.side-menu:checked) {
     overflow: hidden;
   }
@@ -856,13 +847,13 @@ footer textarea {
 
   .landing-artboard {
     grid-template-columns: 1fr;
-    padding-top: 0; /* Remove padding as navbar is fixed */
+    padding-top: 0;
   }
 
   .landing-artboard h1 {
     grid-column: 1;
     grid-row: 1;
-    margin-top: 6em; /* Increased to account for navbar on mobile */
+    margin-top: 6em;
   }
 
   .landing-artboard div {
