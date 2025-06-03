@@ -577,6 +577,20 @@ footer textarea {
   resize: vertical;
 }
 
+.success-message {
+  display: none;
+  color: var(--accent);
+  margin-top: 1em;
+  font-weight: 500;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.success-message.visible {
+  display: block;
+  opacity: 1;
+}
+
 .bios {
   display: flex;
   flex-direction: column;

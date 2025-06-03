@@ -69,6 +69,7 @@
         </div>
       </div>
       <input type="submit" value="Submit" class="submit-button">
+      <div class="success-message">Thanks for reaching out! We'll get back to you shortly.</div>
     </form>
   </footer>
 
@@ -162,8 +163,13 @@
           throw new Error('Network response was not ok');
         })
         .then(data => {
-          // TODO: Make some kind of notification to use, not an alert
+          const successMessage = document.getElementById('success-message');
+          successMessage.classList.add('visible');
           form.reset();
+
+          setTimeout(() => {
+            successMessage.classList.remove('visible');
+          }, 15000);
         })
         .catch(error => {
           console.error('Error:', error);
