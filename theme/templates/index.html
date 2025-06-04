@@ -1,4 +1,10 @@
-{% extends "nav_base.html" %} {% block section %}
+{% extends "nav_base.html" %}
+
+{% block preload %}
+  <link rel="preload" fetchpriority="high" as="image" href="/images/artboard.webp" type="image/webp">
+{% endblock %}
+
+{% block section %}
 
 <div class="landing-artboard">
   <h1>Engineering<br />Intelligence</h1>
