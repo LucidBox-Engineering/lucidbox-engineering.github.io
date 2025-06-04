@@ -58,20 +58,6 @@ h1 {
   line-height: 110%;
 }
 
-/* .navbar {
-  position: sticky;
-  top: 0px;
-  background: url(/images/artboard.webp) no-repeat center center;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: 100%;
-  background-clip: border-box;
-  width: 100%;
-  height: 8em;
-  aspect-ratio: 2.016;
-} */
-
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -201,16 +187,11 @@ h1 {
 .landing-artboard {
   color: var(--primary-light);
   background: url(/images/artboard.webp) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: 100% 100%;
-  width: 100%;
-  aspect-ratio: 2.016;
+  background-size: cover;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
-  padding-top: 0; /* Remove padding as navbar is now fixed */
+  padding-top: 0;
 }
 
 .landing-artboard h1 {
@@ -219,7 +200,7 @@ h1 {
   grid-row: 2;
   align-self: center;
   justify-self: center;
-  margin-top: 2em; /* Add margin to push content down below navbar */
+  margin: 0.5em auto;
 }
 
 .landing-artboard div {
@@ -857,18 +838,18 @@ footer textarea {
 
   .landing-artboard {
     grid-template-columns: 1fr;
-    padding-top: 0;
+    padding-top: 4em;
   }
 
   .landing-artboard h1 {
     grid-column: 1;
-    grid-row: 1;
-    margin-top: 6em;
+    grid-row: 2;
+    margin: auto auto;
   }
 
   .landing-artboard div {
     grid-column: 1;
-    grid-row: 2;
+    grid-row: 4;
     padding-left: 2em;
     padding-right: 2em;
     width: 100%;
@@ -877,7 +858,7 @@ footer textarea {
 
   .landing-artboard .lucid-button {
     grid-column: 1;
-    grid-row: 3;
+    grid-row: 5;
     text-align: center;
   }
 
