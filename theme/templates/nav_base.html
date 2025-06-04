@@ -4,7 +4,7 @@
 
 {% block content %}
   <header class="navbar">
-    <a class="lockup" href="/">
+    <a class="lockup" href="/" aria-label="Home">
       {% if page is defined and page.theme == "light" %}
         {% include 'svg/lockup-dark.svg' %}
       {% else %}
@@ -15,7 +15,7 @@
     <label class="hamburger {% if page is defined and page.theme == 'light' %} light-bg {% endif %}" for="side-menu">
       <span class="hamb-line"></span>
     </label>
-    <nav {% if page is defined and page.theme == "light" %} class="light-bg" {% endif %}>
+    <nav role="menubar" {% if page is defined and page.theme == "light" %} class="light-bg" {% endif %}>
       {% if DISPLAY_PAGES_ON_MENU %}
         {% for p in pages %}
           <a href="{{ SITEURL }}/{{ p.url }}" {% if p==page %} aria-current="page" {% endif %}  role="menuitem"><span class="navtext">{{ p.title }}</span></a>
