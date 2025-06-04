@@ -2,7 +2,21 @@
   font-family: "PP Fraktion Mono";
   src:
     local("PP Fraktion Mono"),
-    url("/theme/fonts/PPFraktionMono-Regular.woff") format("woff");
+    url("/theme/fonts/PPFraktionMono-Regular.woff2") format("woff2"),
+    url("/theme/fonts/PPFraktionMono-Regular.woff") format("woff"),
+    url("/theme/fonts/PPFraktionMono-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi-Regular";
+  src:
+    url("/theme/fonts/Satoshi-Regular.woff2") format("woff2"),
+    url("/theme/fonts/Satoshi-Regular.woff") format("woff"),
+    url("/theme/fonts/Satoshi-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
 }
 
 :root {
@@ -21,7 +35,7 @@
     var(--secondary-blue)
   );
   --primary-font: "PP Fraktion Mono", serif;
-  --secondary-font: "Satoshi", sans-serif;
+  --secondary-font: "Satoshi-Regular", "Satoshi", sans-serif;
 }
 
 * {
