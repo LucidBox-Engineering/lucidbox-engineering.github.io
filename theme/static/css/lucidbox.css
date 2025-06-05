@@ -47,6 +47,14 @@ body {
   margin: 0;
 }
 
+.mobile {
+  display: none;
+}
+
+.desktop {
+  display: inherit;
+}
+
 h1,
 h2,
 h3 {
@@ -272,6 +280,11 @@ h1 {
   }
 }
 
+.max-width-container {
+  max-width: 968px;
+  margin: auto;
+}
+
 h2 {
   color: var(--primary-dark);
   font-size: 1.5em;
@@ -280,8 +293,8 @@ h2 {
 
 .arrow-container {
   display: flex;
-  width: 60%;
-  margin-left: 8%;
+  width: 70%;
+  max-width: 500px;
   padding-top: 4em;
 }
 
@@ -299,16 +312,16 @@ h2 {
 }
 
 .landing-services .button-container {
-  width: 40%;
+  width: 45%;
+  max-width: 450px;
   margin-left: auto;
-  margin-right: 8%;
-  padding-top: 5em;
+  padding-top: 8em;
   padding-bottom: 10em;
 }
 
 p {
   color: var(--secondary-light);
-  padding-bottom: 1em;
+  padding-bottom: 2em;
 }
 
 .landing-about {
@@ -734,6 +747,14 @@ footer textarea {
 }
 
 @media (max-width: 1080px) {
+  .mobile {
+    display: inline;
+  }
+
+  .desktop {
+    display: none;
+  }
+
   h1 {
     font-size: 2.5em;
   }
@@ -860,19 +881,21 @@ footer textarea {
     grid-column: 1;
     grid-row: 5;
     text-align: center;
+    width: 100%;
+    display: block;
   }
 
+  .max-width-container {
+    margin: auto 2em;
+  };
+
   .arrow-container {
-    width: 80%;
+    width: auto;
   }
 
   .landing-services .button-container {
-    width: 80%;
-  }
-
-  .lucid-button {
-    display: block;
-    width: 100%;
+    width: auto;
+    padding-left: 1em;
   }
 
   .landing-about .card-box {
