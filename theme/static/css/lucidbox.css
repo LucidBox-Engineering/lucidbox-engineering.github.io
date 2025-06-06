@@ -860,6 +860,7 @@ footer textarea {
   .landing-artboard {
     grid-template-columns: 1fr;
     padding-top: 4em;
+    background-attachment: scroll;
   }
 
   .landing-artboard h1 {
