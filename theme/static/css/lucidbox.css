@@ -70,21 +70,10 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1em 4em;
-  position: fixed;
+  padding: 2.5em 7em;
+  position: absolute;
   width: 100%;
-  z-index: 1000;
-  background-color: transparent;
   box-sizing: border-box;
-  top: 0;
-  left: 0;
-  transition: all 0.3s ease-in-out;
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
-}
-
-.navbar .lockup {
-  position: relative;
   top: 0;
   left: 0;
 }
@@ -94,9 +83,6 @@ h1 {
 }
 
 .navbar nav {
-  position: relative;
-  top: 0;
-  right: 0;
   display: flex;
   align-items: center;
 }
@@ -265,7 +251,6 @@ h1 {
   background-clip: content-box;
   background-position-y: top 35%;
   animation: resetScaleBackground 15s infinite ease-in-out;
-  position: relative;
 }
 
 @keyframes resetScaleBackground {
@@ -404,9 +389,7 @@ h2.service-industries {
 
 .page {
   background-color: var(--neutral-alt);
-  padding-top: 8rem;
-  position: relative;
-  margin-top: 0;
+  padding-top: 15rem;
 }
 
 .service-page {
@@ -675,10 +658,6 @@ footer textarea {
   padding-left: 1em;
 }
 
-.about-item {
-  position: relative;
-}
-
 .about-item:not(.last-item):after {
   content: "";
   position: absolute;
@@ -765,7 +744,6 @@ footer textarea {
 
   .navbar {
     padding: 1em 2em;
-    position: fixed;
     transition: all 0.3s ease-in-out;
     will-change: backdrop-filter, background-color;
   }
@@ -789,13 +767,6 @@ footer textarea {
     background-color: var(--neutral);
   }
 
-  .side-menu:checked ~ nav.light-bg {
-    background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-
   .navbar nav a {
     margin: 0;
     font-size: 1.2em;
@@ -811,12 +782,11 @@ footer textarea {
     display: none;
   }
 
-  .side-menu:checked ~ nav {
+  .side-menu:checked ~ nav,
+  .side-menu:checked ~ nav a {
     right: 0;
-    background-color: rgba(14, 32, 50, 0.95);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    background-color: var(--primary-blue);
+    color: var(--primary-light);
   }
 
   .side-menu:checked ~ .hamburger .hamb-line {
@@ -839,17 +809,7 @@ footer textarea {
     background-color: var(--primary-light);
   }
 
-  .side-menu:checked ~ .hamburger.light-bg .hamb-line::before,
-  .side-menu:checked ~ .hamburger.light-bg .hamb-line::after {
-    background-color: var(--primary-dark);
-  }
-
   body:has(.side-menu:checked) {
-    overflow: hidden;
-  }
-
-  /* For older browsers that don't support :has */
-  html.menu-open {
     overflow: hidden;
   }
 

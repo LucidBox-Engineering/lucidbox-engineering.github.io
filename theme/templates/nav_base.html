@@ -77,67 +77,12 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const form = document.getElementById('contact-form');
-      const menuCheckbox = document.getElementById('side-menu');
       const navLinks = document.querySelectorAll('nav a');
-      const navbar = document.querySelector('.navbar');
-      const isLightTheme = navbar.querySelector('nav.light-bg') !== null;
-      const htmlElement = document.documentElement;
-
-      // Function to update navbar background based on scroll position
-      function updateNavbarBackground() {
-        // If menu is open, always keep background
-        if (menuCheckbox.checked) {
-          return;
-        }
-
-        if (window.scrollY > 10) { // Apply background after scrolling a bit
-          if (isLightTheme) {
-            navbar.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-          } else {
-            navbar.style.backgroundColor = 'rgba(14, 32, 50, 0.95)';
-          }
-          navbar.style.backdropFilter = 'blur(10px)';
-          navbar.style.webkitBackdropFilter = 'blur(10px)';
-        } else {
-          navbar.style.backgroundColor = 'transparent';
-          navbar.style.backdropFilter = 'none';
-          navbar.style.webkitBackdropFilter = 'none';
-        }
-      }
-
-      // Add scroll event listener to change navbar background
-      window.addEventListener('scroll', updateNavbarBackground);
-
-      // Initial call to set correct state on page load
-      updateNavbarBackground();
-
-      // Handle menu state changes
-      menuCheckbox.addEventListener('change', function() {
-        if (this.checked) {
-          // When menu opens, always apply background
-          if (isLightTheme) {
-            navbar.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-          } else {
-            navbar.style.backgroundColor = 'rgba(14, 32, 50, 0.95)';
-          }
-          navbar.style.backdropFilter = 'blur(10px)';
-          navbar.style.webkitBackdropFilter = 'blur(10px)';
-          document.body.style.overflow = 'hidden';
-          htmlElement.classList.add('menu-open');
-        } else {
-          // When menu closes, update based on scroll position
-          document.body.style.overflow = 'auto';
-          htmlElement.classList.remove('menu-open');
-          updateNavbarBackground();
-        }
-      });
 
       // Close menu when a navigation link is clicked
       navLinks.forEach(link => {
         link.addEventListener('click', function() {
           menuCheckbox.checked = false;
-          document.body.style.overflow = 'auto';
-          updateNavbarBackground();
         });
       });
 
