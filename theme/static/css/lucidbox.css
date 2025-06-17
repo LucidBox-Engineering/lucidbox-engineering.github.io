@@ -32,6 +32,7 @@
   );
   --primary-font: "PP Fraktion Mono", serif;
   --secondary-font: "Satoshi-Regular", "Satoshi", sans-serif;
+  --column-max-width: 968px;
 }
 
 * {
@@ -266,7 +267,7 @@ h1 {
 }
 
 .max-width-container {
-  max-width: 968px;
+  max-width: var(--column-max-width);
   margin: auto;
 }
 
@@ -279,7 +280,6 @@ h2 {
 .arrow-container {
   display: flex;
   width: 70%;
-  max-width: 500px;
   padding-top: 4em;
 }
 
@@ -315,18 +315,25 @@ p {
 .landing-about .card-box {
   display: flex;
   flex-direction: row;
+  gap: 1em;
   justify-content: space-around;
-  margin-left: 1em;
-  margin-right: 1em;
+  max-width: calc(var(--column-max-width) * 1.25);
+  margin: auto;
+  padding: 1em;
 }
 .card {
+  flex: 1;
   padding: 2em;
   background-color: var(--neutral);
   border-radius: 8px;
-  margin-left: 1em;
-  margin-right: 1em;
-  margin-top: 10em;
-  margin-bottom: 10em;
+  margin-top: 8em;
+  margin-bottom: 8em;
+}
+
+.card p {
+  padding-bottom: 0;
+  font-size: 0.9em;
+  line-height: 1.7em;
 }
 
 .service-industries .card {
@@ -846,7 +853,8 @@ footer textarea {
     display: block;
   }
 
-  .max-width-container {
+  .max-width-container,
+  .landing-about .card-box {
     margin: auto 2em;
   };
 
