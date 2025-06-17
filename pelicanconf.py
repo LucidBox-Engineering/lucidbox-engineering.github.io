@@ -1,7 +1,7 @@
 from datetime import datetime
 
 AUTHOR = "LucidBox"
-SITENAME = "LucidBox Engineering &amp; Consulting"
+SITENAME = "LucidBox Engineering &amp; Consulting Ltd."
 SITEURL = ""
 THEME = "theme"
 
