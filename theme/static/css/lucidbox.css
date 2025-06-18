@@ -53,10 +53,6 @@ body {
   display: none;
 }
 
-.desktop {
-  display: inherit;
-}
-
 h1,
 h2,
 h3 {
@@ -228,6 +224,7 @@ h1 {
   transition:
     background-position 0.3s cubic-bezier(0.87, 0, 0.13, 1),
     color 0.3s cubic-bezier(0.87, 0, 0.13, 1);
+  align-self: flex-start;
 }
 
 .landing-artboard .lucid-button {
@@ -500,6 +497,7 @@ footer h1 {
   display: flex;
   flex-direction: column;
   gap: 1em;
+  max-width: 700px;
 }
 
 .contact-info {
@@ -535,6 +533,10 @@ footer h1 {
 .contact-item a {
   color: var(--primary-light);
   text-decoration: none;
+}
+
+.copyright {
+  margin-bottom: 4em;
 }
 
 .input-row {
@@ -907,8 +909,8 @@ footer textarea {
     width: 90%;
   }
 
-  .contact-form,
-  .submit-button {
-    display: none;
+  .contact-boxes,
+  .input-row {
+    flex-direction: column;
   }
 }

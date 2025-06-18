@@ -30,51 +30,56 @@
 
   <footer>
     <h1>Contact Us</h1>
-    <form id="contact-form" action="http://localhost:8008" method="post">
-      <div class="contact-boxes">
-        <div class="contact-form">
-          <div class="input-row">
-            <div class="input-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" name="name" required>
-            </div>
-            <div class="input-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" required>
-            </div>
+    {% if page is not defined or page.title != 'Contact' %}
+      <a class="lucid-button mobile" href="/pages/contact.html">Contact Form ></a>
+    {% endif %}
+    <div class="contact-boxes">
+      {% if page is defined and page.title == 'Contact' %}
+      <form id="contact-form" class="contact-form">
+      {% else %}
+      <form id="contact-form" class="contact-form desktop">
+      {% endif %}
+        <div class="input-row">
+          <div class="input-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
           </div>
           <div class="input-group">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" required></textarea>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
           </div>
         </div>
-        <div class="contact-info">
-          <div class="wordmark">
-            {% include 'svg/wordmark.svg' %}
+        <div class="input-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" required></textarea>
+        </div>
+        <input type="submit" value="Submit" class="submit-button">
+        <div id="success-message" class="success-message">Thanks for reaching out! We'll get back to you shortly.</div>
+        <div id="error-message" class="error-message">Something went wrong. Please try again or contact us at <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>.</div>
+      </form>
+      <div class="contact-info">
+        <div class="wordmark">
+          {% include 'svg/wordmark.svg' %}
+        </div>
+        <div class="contact-details">
+          <div class="contact-item">
+            {% include 'svg/lucide-mail.svg' %}
+            <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>
           </div>
-          <div class="contact-details">
-            <div class="contact-item">
-              {% include 'svg/lucide-mail.svg' %}
-              <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>
-            </div>
-            <div class="contact-item">
-              {% include 'svg/lucide-phone.svg' %}
-              <a href="tel:{{ CONTACT_PHONE_CLEAN }}">{{ CONTACT_PHONE }}</a>
-            </div>
-            <div class="contact-item">
-              {% include 'svg/lucide-map-pin.svg' %}
-              <span>{{ CONTACT_ADDRESS }}</span>
-            </div>
+          <div class="contact-item">
+            {% include 'svg/lucide-phone.svg' %}
+            <a href="tel:{{ CONTACT_PHONE_CLEAN }}">{{ CONTACT_PHONE }}</a>
           </div>
-          <div>
-            <span>{{ SITENAME }} {{ YEAR }}</span>
+          <div class="contact-item">
+            {% include 'svg/lucide-map-pin.svg' %}
+            <span>{{ CONTACT_ADDRESS }}</span>
           </div>
+        </div>
+        <div class="copyright">
+          <span>{{ SITENAME }} {{ YEAR }}</span>
         </div>
       </div>
-      <input type="submit" value="Submit" class="submit-button">
-      <div id="success-message" class="success-message">Thanks for reaching out! We'll get back to you shortly.</div>
-      <div id="error-message" class="error-message">Something went wrong. Please try again or contact us at <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>.</div>
-    </form>
+    </div>
   </footer>
 
   <script>
