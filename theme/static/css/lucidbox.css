@@ -32,7 +32,8 @@
   );
   --primary-font: "PP Fraktion Mono", serif;
   --secondary-font: "Satoshi-Regular", "Satoshi", sans-serif;
-  --column-max-width: 968px;
+  --max-width: 1200px; /* for container elements */
+  --column-max-width: 968px; /* For text elements */
 }
 
 * {
@@ -317,7 +318,7 @@ p {
   flex-direction: row;
   gap: 1em;
   justify-content: space-around;
-  max-width: calc(var(--column-max-width) * 1.25);
+  max-width: var(--max-width);
   margin: auto;
   padding: 1em;
 }
@@ -477,11 +478,11 @@ h2.service-industries {
   transform: translateX(5px);
 }
 
-/* Contact Form Styling */
 footer {
   color: var(--primary-light);
-  padding: 4em;
-  padding-top: 8em;
+  padding: 8em 2em 4em 2em;
+  max-width: var(--max-width);
+  margin: auto;
 }
 
 footer h1 {
