@@ -853,8 +853,7 @@ footer textarea {
     display: block;
   }
 
-  .max-width-container,
-  .landing-about .card-box {
+  .max-width-container {
     margin: auto 2em;
   }
 
