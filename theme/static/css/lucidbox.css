@@ -949,4 +949,11 @@ footer textarea {
   .input-row {
     flex-direction: column;
   }
+
+  .card,
+  .service-card {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
 }
