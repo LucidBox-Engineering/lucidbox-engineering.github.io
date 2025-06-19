@@ -33,7 +33,7 @@
   --primary-font: "PP Fraktion Mono", serif;
   --secondary-font: "Satoshi-Regular", "Satoshi", sans-serif;
   --max-width: 1200px; /* for container elements */
-  --column-max-width: 968px; /* For text elements */
+  --column-max-width: 1080px; /* For text elements */
 }
 
 * {
@@ -277,7 +277,7 @@ h2 {
 
 .arrow-container {
   display: flex;
-  width: 70%;
+  width: 60%;
   padding-top: 4em;
 }
 
@@ -295,11 +295,11 @@ h2 {
 }
 
 .landing-services .button-container {
-  width: 45%;
-  max-width: 450px;
+  width: 50%;
   margin-left: auto;
   padding-top: 8em;
   padding-bottom: 10em;
+  padding: 8em 8% 10em 0;
 }
 
 p {
@@ -405,9 +405,8 @@ h2.service-industries {
   background-image: var(--primary-gradient);
   background-clip: text;
   color: transparent;
-  margin-left: 8%;
-  margin-right: 15%;
   padding-bottom: 5rem;
+  padding-right: 2em;
 }
 
 .engagement-cards {
@@ -649,10 +648,14 @@ footer textarea {
 }
 
 .about-extended {
-  display: flex;
-  gap: 2em;
   background-color: var(--neutral);
+}
+
+.about-extended .max-width-container {
+  display: flex;
+  gap: 6em;
   padding-bottom: 6em;
+  max-width: var(--max-width);
 }
 
 .about-extended .arrow-container {
@@ -677,6 +680,7 @@ footer textarea {
   height: calc(100% + 1.5em); /* Extends to the next icon with proper spacing */
   background-color: var(--primary-blue);
   z-index: 0; /* Ensure line appears behind icons */
+  opacity: 0.25;
 }
 
 .about-item {
@@ -685,6 +689,7 @@ footer textarea {
   align-items: flex-start;
   position: relative;
   margin-bottom: 3.5em;
+  min-height: 10em;
 }
 
 .item-icon-container {
@@ -705,7 +710,7 @@ footer textarea {
   height: 34px;
   z-index: 2;
   position: relative;
-  box-shadow: 0 0 0 10px var(--neutral); /* Create clean break in the line */
+  box-shadow: 0 0 0 16px var(--neutral); /* Create clean break in the line */
 }
 
 .item-icon svg {
@@ -725,7 +730,7 @@ footer textarea {
 
 .item-title {
   margin-bottom: 0.5em;
-  color: var(--primary-blue);
+  color: var(--primary-dark);
 }
 
 .item-text {
@@ -862,10 +867,12 @@ footer textarea {
 
   .arrow-container {
     width: auto;
+    max-width: 550px;
   }
 
   .landing-services .button-container {
     width: auto;
+    max-width: 500px;
     padding-left: 1em;
   }
 
@@ -881,8 +888,12 @@ footer textarea {
     flex-direction: column;
   }
 
-  .about-extended {
+  .about-extended .max-width-container {
     flex-direction: column;
+  }
+
+  .about-items {
+    max-width: 550px;
   }
 
   .engagement-card {
