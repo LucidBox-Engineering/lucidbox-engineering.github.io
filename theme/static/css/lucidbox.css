@@ -844,6 +844,10 @@ footer textarea {
     background-color: var(--primary-light);
   }
 
+  .page {
+    padding-top: 10rem;
+  }
+
   body:has(.side-menu:checked) {
     overflow: hidden;
   }
