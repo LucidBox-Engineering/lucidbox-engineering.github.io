@@ -269,6 +269,10 @@ h1 {
   margin: auto;
 }
 
+.max-width-container.wide {
+  max-width: var(--max-width);
+}
+
 h2 {
   color: var(--primary-dark);
   font-size: 1.5em;
@@ -309,6 +313,7 @@ p {
 
 .landing-about {
   background-image: var(--primary-gradient);
+  padding: 8em 0;
 }
 .landing-about .card-box {
   display: flex;
@@ -324,8 +329,6 @@ p {
   padding: 2em;
   background-color: var(--neutral);
   border-radius: 8px;
-  margin-top: 8em;
-  margin-bottom: 8em;
 }
 
 .card p {
@@ -334,22 +337,16 @@ p {
   line-height: 1.7em;
 }
 
-.service-industries .card {
-  margin-top: 2em;
-}
-
 .service-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1em;
-  margin: 2em 8%;
-  padding-bottom: 3em;
 }
 
 .service-card {
   background-color: var(--neutral-alt);
   border-radius: 8px;
-  padding: 1.5em;
+  padding: 2em;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -378,8 +375,7 @@ p {
 
 h2.service-industries {
   color: var(--neutral);
-  padding-top: 4em;
-  padding-left: 2em;
+  padding-left: 1rem;
 }
 
 .digit {
@@ -407,6 +403,25 @@ h2.service-industries {
   color: transparent;
   padding-bottom: 5rem;
   padding-right: 2em;
+}
+
+.service-lists {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5em;
+  margin: 0 auto;
+  padding-bottom: 10em;
+}
+
+.service-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+.service-group p {
+  max-width: 500px;
+  padding-bottom: 1em;
 }
 
 .engagement-cards {
@@ -877,10 +892,6 @@ footer textarea {
 
   .landing-about .card-box {
     flex-direction: column;
-  }
-  .card {
-    margin-bottom: 2em;
-    margin-top: 2em;
   }
 
   .bio {

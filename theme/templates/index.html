@@ -1,12 +1,20 @@
-{% extends "nav_base.html" %}
-
-{% block preloads %}
-  <link rel="preload" fetchpriority="high" as="image" href="/images/artboard.webp" type="image/webp" />
-  <link rel="preload" fetchpriority="high" as="font" href="/theme/fonts/PPFraktionMono-Regular.woff2" type="font/woff2" crossorigin />
-{% endblock %}
-
-{% block section %}
-
+{% extends "nav_base.html" %} {% block preloads %}
+<link
+  rel="preload"
+  fetchpriority="high"
+  as="image"
+  href="/images/artboard.webp"
+  type="image/webp"
+/>
+<link
+  rel="preload"
+  fetchpriority="high"
+  as="font"
+  href="/theme/fonts/PPFraktionMono-Regular.woff2"
+  type="font/woff2"
+  crossorigin
+/>
+{% endblock %} {% block section %}
 <div class="landing-artboard">
   <h1>Engineering<br />Intelligence</h1>
   <div>Software, Hardware, and Strategy for the Future</div>
@@ -17,8 +25,8 @@
     <div class="arrow-container">
       <h2 class="arrow">></h2>
       <h2>
-        LucidBox is a modern engineering and consulting firm blending software and
-        electrical expertise to create elegant, high-performance systems.
+        LucidBox is a modern engineering and consulting firm blending software
+        and electrical expertise to create elegant, high-performance systems.
       </h2>
     </div>
     <div class="button-container">
@@ -26,40 +34,43 @@
         From product design to infrastructure and strategy, we help ambitious
         teams bring clarity and innovation to complex challenges.
       </p>
-      <a class="lucid-button desktop" href="/pages/services.html">See our list of services ></a>
+      <a class="lucid-button desktop" href="/pages/services.html"
+        >See our list of services ></a
+      >
       <a class="lucid-button mobile" href="/pages/services.html">Services ></a>
     </div>
   </div>
 </div>
 <div class="landing-about">
-  <div class="card-box">
-    <div class="card">
-      <span class="digit">01.</span>
-      <h2>Industries We Serve</h2>
-      <p>
-        We work with clean-tech innovators, energy storage pioneers, and
-        industrial IoT teams to build technologies that matter.
-      </p>
-    </div>
-    <div class="card">
-      <span class="digit">02.</span>
-      <h2>What we do</h2>
-      <p>
-        We specialize in bridging hardware and software to build scalable,
-        intelligent, and future-ready systems. Our services span software
-        development, electrical engineering, and strategic consulting.
-      </p>
-    </div>
-    <div class="card">
-      <span class="digit">03.</span>
-      <h2>Why LucidBox?</h2>
-      <p>
-        We’re not just engineers—we’re partners in progress. We bring a rare
-        combination of deep technical skill, strategic insight, and creative
-        drive.
-      </p>
+  <div class="max-width-container wide">
+    <div class="card-box">
+      <div class="card">
+        <span class="digit">01.</span>
+        <h2>Industries We Serve</h2>
+        <p>
+          We work with clean-tech innovators, energy storage pioneers, and
+          industrial IoT teams to build technologies that matter.
+        </p>
+      </div>
+      <div class="card">
+        <span class="digit">02.</span>
+        <h2>What we do</h2>
+        <p>
+          We specialize in bridging hardware and software to build scalable,
+          intelligent, and future-ready systems. Our services span software
+          development, electrical engineering, and strategic consulting.
+        </p>
+      </div>
+      <div class="card">
+        <span class="digit">03.</span>
+        <h2>Why LucidBox?</h2>
+        <p>
+          We’re not just engineers—we’re partners in progress. We bring a rare
+          combination of deep technical skill, strategic insight, and creative
+          drive.
+        </p>
+      </div>
     </div>
   </div>
 </div>
-
 {% endblock section %}
