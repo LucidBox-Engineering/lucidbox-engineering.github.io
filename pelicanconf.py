@@ -33,6 +33,8 @@ TAGS_SAVE_AS = ""
 TAG_SAVE_AS = ""
 
 PAGE_ORDER_BY = "order"
+PAGE_URL = '{slug}/'
+PAGE_SAVE_AS = '{slug}/index.html'
 
 DEFAULT_PAGINATION = False
 
