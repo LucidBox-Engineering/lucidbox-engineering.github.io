@@ -99,17 +99,17 @@
         event.preventDefault();
 
         const formData = {
-          name: document.getElementById('name').value,
-          email: document.getElementById('email').value,
-          message: document.getElementById('message').value
         };
-
-        fetch('https://defaultd32e878d4f2b4379969c8438dd78af.5e.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/e65b4015192d42689146f47a14118196/triggers/manual/paths/invoke/?api-version=1&tenantId=tId&environmentName=Default-d32e878d-4f2b-4379-969c-8438dd78af5e&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Gxhu6h5VCtrjTVFc-v91-KpF1uJgB9RHQFLCuPj6SBY', {
+        fetch('https://7x2k2jzqq2.execute-api.ca-central-1.amazonaws.com/prod/contact', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/x-www-form-urlencoded'
           },
-          body: JSON.stringify(formData)
+          body: new URLSearchParams({
+                  name: document.getElementById('name').value,
+                  email: document.getElementById('email').value,
+                  message: document.getElementById('message').value
+          })
         })
         .then(response => {
           if (response.ok) {
