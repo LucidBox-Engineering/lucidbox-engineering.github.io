@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCB Circuit Animation</title>
+    <style>
+    :root {
+  --neutral: white;
+  --neutral-alt: #fafafa;
+  --accent: #01ffa6;
+  --primary-dark: #0e2032;
+  --primary-light: #eeeeee;
+  --primary-blue: #001aff;
+  --secondary-light: #727272;
+  --secondary-blue: #4ed7f9;
+  --primary-gradient: linear-gradient(
+    to bottom right,
+    var(--primary-dark),
+    var(--primary-blue),
+    var(--secondary-blue)
+  );
+}
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-dark);
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .pcb-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .chip {
+            position: absolute;
+            background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+            border: 2px solid #1a252f;
+            border-radius: 4px;
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .chip-large {
+            width: 120px;
+            height: 120px;
+            top: 40%;
+            left: 30%;
+            transform: translate(-50%, -50%);
+        }
+
+        .chip-small {
+            width: 80px;
+            height: 80px;
+            top: 60%;
+            left: 70%;
+            transform: translate(-50%, -50%);
+        }
+
+        .chip::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60%;
+            height: 60%;
+            background: transparent;
+            transform: translate(-50%, -50%);
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+        }
+
+        .trace {
+            position: absolute;
+            stroke: rgba(180, 180, 180, 0.4);
+            stroke-width: 3;
+            fill: none;
+            pointer-events: none;
+        }
+
+        .light {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #aaaaaa;
+            border-radius: 50%;
+            box-shadow:
+                0 0 15px #00ff88,
+                0 0 30px #00ff88,
+                0 0 45px rgba(0, 255, 136, 0.5);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .light.variant-1 {
+            background: #aaaaaa;
+            box-shadow:
+                0 0 15px #00aaff,
+                0 0 30px #00aaff,
+                0 0 45px rgba(0, 170, 255, 0.5);
+        }
+
+        .light.variant-2 {
+            background: #aaaaaa;
+            box-shadow:
+                0 0 15px #ff6b35,
+                0 0 30px #ff6b35,
+                0 0 45px rgba(255, 107, 53, 0.5);
+        }
+
+        .light.variant-3 {
+            background: #aaaaaa0;
+            box-shadow:
+                0 0 15px #ffd700,
+                0 0 30px #ffd700,
+                0 0 45px rgba(255, 215, 0, 0.5);
+        }
+
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+    </style>
+
+    <script src="https://kalabasa.github.io/simple-live-reload/script.js"></script>
+
+</head>
+<body>
+    <div class="pcb-container">
+        <svg id="traces"></svg>
+        <div class="chip chip-large"></div>
+        <div class="chip chip-small"></div>
+    </div>
+
+    <script>
+        class PCBAnimation {
+            constructor() {
+                this.container = document.querySelector('.pcb-container');
+                this.svg = document.getElementById('traces');
+                this.lights = [];
+                this.traces = [];
+                this.chipPositions = {
+                    large: { x: window.innerWidth * 0.3, y: window.innerHeight * 0.4 },
+                    small: { x: window.innerWidth * 0.7, y: window.innerHeight * 0.6 }
+                };
+                this.init();
+            }
+
+            init() {
+                this.createTraces();
+                this.startAnimation();
+                this.handleResize();
+            }
+
+            createTraces() {
+                const traces = [
+                    // Traces from large chip
+                    {
+                        path: this.createPath(
+                            this.chipPositions.large.x - 60, this.chipPositions.large.y,
+                            this.chipPositions.large.x - 200, this.chipPositions.large.y,
+                            this.chipPositions.large.x - 300, this.chipPositions.large.y - 100,
+                            -100, this.chipPositions.large.y - 100
+                        ),
+                        speed: 2.5
+                    },
+                    {
+                        path: this.createPath(
+                            this.chipPositions.large.x + 60, this.chipPositions.large.y,
+                            this.chipPositions.large.x + 150, this.chipPositions.large.y,
+                            this.chipPositions.large.x + 200, this.chipPositions.large.y + 80,
+                            this.chipPositions.small.x - 40, this.chipPositions.small.y
+                        ),
+                        speed: 3
+                    },
+                    {
+                        path: this.createPath(
+                            this.chipPositions.large.x, this.chipPositions.large.y - 60,
+                            this.chipPositions.large.x, this.chipPositions.large.y - 150,
+                            this.chipPositions.large.x + 100, this.chipPositions.large.y - 200,
+                            this.chipPositions.large.x + 300, this.chipPositions.large.y - 200,
+                            window.innerWidth + 100, this.chipPositions.large.y - 200
+                        ),
+                        speed: 2.8
+                    },
+                    {
+                        path: this.createPath(
+                            this.chipPositions.large.x, this.chipPositions.large.y + 60,
+                            this.chipPositions.large.x, this.chipPositions.large.y + 150,
+                            this.chipPositions.large.x - 150, this.chipPositions.large.y + 200,
+                            -100, this.chipPositions.large.y + 200
+                        ),
+                        speed: 2.2
+                    },
+                    {
+                        path: this.createPath(
+                            this.chipPositions.large.x - 42, this.chipPositions.large.y - 42,
+                            this.chipPositions.large.x - 100, this.chipPositions.large.y - 100,
+                            this.chipPositions.large.x - 200, this.chipPositions.large.y - 50,
+                            this.chipPositions.large.x - 300, this.chipPositions.large.y + 50,
+                            -100, this.chipPositions.large.y + 50
+                        ),
+                        speed: 2.6
+                    },
+                    // Traces from small chip
+                    {
+                        path: this.createPath(
+                            this.chipPositions.small.x + 40, this.chipPositions.small.y,
+                            this.chipPositions.small.x + 150, this.chipPositions.small.y,
+                            this.chipPositions.small.x + 200, this.chipPositions.small.y - 80,
+                            window.innerWidth + 100, this.chipPositions.small.y - 80
+                        ),
+                        speed: 3.2
+                    },
+                    {
+                        path: this.createPath(
+                            this.chipPositions.small.x, this.chipPositions.small.y - 40,
+                            this.chipPositions.small.x, this.chipPositions.small.y - 120,
+                            this.chipPositions.small.x + 100, this.chipPositions.small.y - 180,
+                            window.innerWidth + 100, this.chipPositions.small.y - 180
+                        ),
+                        speed: 2.7
+                    },
+                    {
+                        path: this.createPath(
+                            this.chipPositions.small.x, this.chipPositions.small.y + 40,
+                            this.chipPositions.small.x, this.chipPositions.small.y + 120,
+                            this.chipPositions.small.x - 80, this.chipPositions.small.y + 180,
+                            -100, this.chipPositions.small.y + 180
+                        ),
+                        speed: 2.4
+                    },
+                    {
+                        path: this.createPath(
+                            this.chipPositions.small.x - 40, this.chipPositions.small.y,
+                            this.chipPositions.small.x - 120, this.chipPositions.small.y,
+                            this.chipPositions.small.x - 180, this.chipPositions.small.y + 60,
+                            -100, this.chipPositions.small.y + 60
+                        ),
+                        speed: 2.9
+                    },
+                    {
+                        path: this.createPath(
+                            this.chipPositions.small.x + 28, this.chipPositions.small.y + 28,
+                            this.chipPositions.small.x + 100, this.chipPositions.small.y + 100,
+                            this.chipPositions.small.x + 200, this.chipPositions.small.y + 150,
+                            window.innerWidth + 100, this.chipPositions.small.y + 150
+                        ),
+                        speed: 3.1
+                    }
+                ];
+
+                // Create SVG paths
+                traces.forEach((trace, index) => {
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', trace.path);
+                    path.setAttribute('class', 'trace');
+                    this.svg.appendChild(path);
+                    this.traces.push({ element: path, speed: trace.speed, pathData: trace.path });
+                });
+            }
+
+            createPath(...points) {
+                if (points.length < 4) return '';
+
+                let path = `M ${points[0]} ${points[1]}`;
+
+                for (let i = 2; i < points.length; i += 2) {
+                    if (i + 1 < points.length) {
+                        const prevX = points[i - 2];
+                        const prevY = points[i - 1];
+                        const currX = points[i];
+                        const currY = points[i + 1];
+
+                        // Add smooth curves at corners
+                        const controlDistance = 30;
+                        const dx = currX - prevX;
+                        const dy = currY - prevY;
+                        const length = Math.sqrt(dx * dx + dy * dy);
+
+                        if (length > 0) {
+                            const unitX = dx / length;
+                            const unitY = dy / length;
+
+                            const controlX = prevX + unitX * Math.min(controlDistance, length * 0.3);
+                            const controlY = prevY + unitY * Math.min(controlDistance, length * 0.3);
+
+                            path += ` Q ${controlX} ${controlY} ${currX} ${currY}`;
+                        } else {
+                            path += ` L ${currX} ${currY}`;
+                        }
+                    }
+                }
+
+                return path;
+            }
+
+            createLight(traceIndex) {
+                const light = document.createElement('div');
+                light.className = `light variant-${Math.floor(Math.random() * 4)}`;
+                this.container.appendChild(light);
+
+                const trace = this.traces[traceIndex];
+                const pathElement = trace.element;
+                const pathLength = pathElement.getTotalLength();
+
+                const lightData = {
+                    element: light,
+                    path: pathElement,
+                    pathLength: pathLength,
+                    progress: 0,
+                    speed: trace.speed + (Math.random() - 0.5) * 0.5,
+                    traceIndex: traceIndex
+                };
+
+                this.lights.push(lightData);
+            }
+
+            updateLights() {
+                this.lights.forEach((light, index) => {
+                    light.progress += light.speed;
+
+                    if (light.progress >= light.pathLength) {
+                        light.element.remove();
+                        this.lights.splice(index, 1);
+                        return;
+                    }
+
+                    const point = light.path.getPointAtLength(light.progress);
+                    light.element.style.left = (point.x - 3) + 'px';
+                    light.element.style.top = (point.y - 3) + 'px';
+
+                    // Fade out as light approaches end
+                    const fadeStart = light.pathLength * 0.8;
+                    if (light.progress > fadeStart) {
+                        const fadeProgress = (light.progress - fadeStart) / (light.pathLength - fadeStart);
+                        light.element.style.opacity = 1 - fadeProgress;
+                    }
+                });
+            }
+
+            startAnimation() {
+                const animate = () => {
+                    this.updateLights();
+
+                    // Spawn new lights randomly
+                    if (Math.random() < 0.15) {
+                        const traceIndex = Math.floor(Math.random() * this.traces.length);
+                        this.createLight(traceIndex);
+                    }
+
+                    requestAnimationFrame(animate);
+                };
+
+                animate();
+            }
+
+            handleResize() {
+                window.addEventListener('resize', () => {
+                    this.chipPositions = {
+                        large: { x: window.innerWidth * 0.3, y: window.innerHeight * 0.4 },
+                        small: { x: window.innerWidth * 0.7, y: window.innerHeight * 0.6 }
+                    };
+
+                    // Clear existing traces and lights
+                    this.svg.innerHTML = '';
+                    this.lights.forEach(light => light.element.remove());
+                    this.lights = [];
+                    this.traces = [];
+
+                    // Recreate traces
+                    this.createTraces();
+                });
+            }
+        }
+
+        // Initialize animation when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new PCBAnimation();
+        });
+    </script>
+</body>
+</html>
+</html>
