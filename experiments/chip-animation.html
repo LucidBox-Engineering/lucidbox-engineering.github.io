@@ -262,6 +262,7 @@
                 if (points.length < 4) return '';
 
                 let path = `M ${points[0]} ${points[1]}`;
+                const cornerRadius = 20;
 
                 for (let i = 2; i < points.length; i += 2) {
                     if (i + 1 < points.length) {
@@ -270,21 +271,56 @@
                         const currX = points[i];
                         const currY = points[i + 1];
 
-                        // Add smooth curves at corners
-                        const controlDistance = 30;
-                        const dx = currX - prevX;
-                        const dy = currY - prevY;
-                        const length = Math.sqrt(dx * dx + dy * dy);
+                        // For the last point, just draw a straight line
+                        if (i + 2 >= points.length) {
+                            path += ` L ${currX} ${currY}`;
+                            continue;
+                        }
 
-                        if (length > 0) {
-                            const unitX = dx / length;
-                            const unitY = dy / length;
+                        const nextX = points[i + 2];
+                        const nextY = points[i + 3];
 
-                            const controlX = prevX + unitX * Math.min(controlDistance, length * 0.3);
-                            const controlY = prevY + unitY * Math.min(controlDistance, length * 0.3);
+                        // Calculate direction vectors
+                        const dx1 = currX - prevX;
+                        const dy1 = currY - prevY;
+                        const dx2 = nextX - currX;
+                        const dy2 = nextY - currY;
 
-                            path += ` Q ${controlX} ${controlY} ${currX} ${currY}`;
+                        // Normalize vectors
+                        const len1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
+                        const len2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+
+                        if (len1 === 0 || len2 === 0) {
+                            path += ` L ${currX} ${currY}`;
+                            continue;
+                        }
+
+                        const unit1X = dx1 / len1;
+                        const unit1Y = dy1 / len1;
+                        const unit2X = dx2 / len2;
+                        const unit2Y = dy2 / len2;
+
+                        // Check if we need a corner (not a straight line)
+                        const dotProduct = unit1X * unit2X + unit1Y * unit2Y;
+                        const isCorner = Math.abs(dotProduct) < 0.99; // Allow for small floating point errors
+
+                        if (isCorner) {
+                            // Calculate the actual corner radius based on available space
+                            const actualRadius = Math.min(cornerRadius, len1 * 0.4, len2 * 0.4);
+
+                            // Calculate points for the rounded corner
+                            const cornerStartX = currX - unit1X * actualRadius;
+                            const cornerStartY = currY - unit1Y * actualRadius;
+                            const cornerEndX = currX + unit2X * actualRadius;
+                            const cornerEndY = currY + unit2Y * actualRadius;
+
+                            // Draw line to corner start
+                            path += ` L ${cornerStartX} ${cornerStartY}`;
+
+                            // Draw rounded corner using quadratic curve
+                            path += ` Q ${currX} ${currY} ${cornerEndX} ${cornerEndY}`;
                         } else {
+                            // Straight line, no corner needed
                             path += ` L ${currX} ${currY}`;
                         }
                     }
