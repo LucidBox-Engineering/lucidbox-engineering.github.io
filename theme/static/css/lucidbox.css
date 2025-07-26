@@ -244,6 +244,7 @@ h1 {
 
 .landing-services {
   color: var(--primary-dark);
+  will-change: background-size;
   background: url('data:image/svg+xml,<svg width="62" height="64" viewBox="0 0 62 64" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(%23clip0_60_2041)"><path d="M60.6734 34.3366L30.9751 63.6634H17.5454L47.2436 34.3366C48.6459 32.9519 48.6459 30.7116 47.2436 29.3268L17.5454 0L30.9979 0.0225158L56.4894 25.1952L60.6734 29.3268C62.0757 30.7116 62.0757 32.9519 60.6734 34.3366ZM12.1757 31.8261L24.2602 19.8927L19.1528 14.8492C18.2636 13.9711 16.8157 13.9711 15.9265 14.8492L0.889238 29.7096C-0.296413 30.8804 -0.296413 32.783 0.889238 33.9538L5.46083 38.4682L15.9379 48.8143C16.8271 49.6924 18.275 49.6924 19.1642 48.8143L24.2716 43.7707L12.1871 31.8373L12.1757 31.8261Z" fill="%23f4f4f4"/></g><defs><clipPath id="clip0_60_2041"><rect width="62" height="64" fill="%23f4f4f4"/></clipPath></defs></svg>')
     no-repeat center center;
   background-color: var(--neutral-alt);
