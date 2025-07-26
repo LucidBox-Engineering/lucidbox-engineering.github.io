@@ -178,7 +178,8 @@ h1 {
 
 .landing-artboard {
   color: var(--primary-light);
-  background: url(/images/artboard.webp) no-repeat center center fixed;
+  background-color: var(--primary-dark);
+  background: url(/images/artboard.avif) no-repeat center center fixed;
   background-size: cover;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
