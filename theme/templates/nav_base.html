@@ -3,135 +3,135 @@
 {% block description %}{{ SITENAME }}{% endblock description %}
 
 {% block content %}
-  <header class="navbar">
-    <a class="lockup" href="/" aria-label="Home">
-      {% if page is defined and page.theme == "light" %}
-        {% include 'svg/lockup-dark.svg' %}
-      {% else %}
-        {% include 'svg/lockup-light.svg' %}
-      {% endif %}
-    </a>
-    <input class="side-menu" type="checkbox" id="side-menu"/>
-    <label class="hamburger {% if page is defined and page.theme == 'light' %} light-bg {% endif %}" for="side-menu">
-      <span class="hamb-line"></span>
-    </label>
-    <nav role="menubar" {% if page is defined and page.theme == "light" %} class="light-bg" {% endif %}>
-      {% if DISPLAY_PAGES_ON_MENU %}
-        {% for p in pages %}
-          <a href="{{ SITEURL }}/{{ p.url }}" {% if p==page %} aria-current="page" {% endif %}  role="menuitem"><span class="navtext">{{ p.title }}</span></a>
-        {% endfor %}
-      {% endif %}
-    </nav>
-  </header>
+<header class="navbar">
+	<a class="lockup" href="/" aria-label="Home">
+		{% if page is defined and page.theme == "light" %}
+			{% include 'svg/lockup-dark.svg' %}
+		{% else %}
+			{% include 'svg/lockup-light.svg' %}
+		{% endif %}
+	</a>
+	<input class="side-menu" type="checkbox" id="side-menu"/>
+	<label class="hamburger {% if page is defined and page.theme == 'light' %} light-bg {% endif %}" for="side-menu">
+		<span class="hamb-line"></span>
+	</label>
+	<nav role="menubar" {% if page is defined and page.theme == "light" %} class="light-bg" {% endif %}>
+		{% if DISPLAY_PAGES_ON_MENU %}
+			{% for p in pages %}
+				<a href="{{ SITEURL }}/{{ p.url }}" {% if p==page %} aria-current="page" {% endif %}  role="menuitem"><span class="navtext">{{ p.title }}</span></a>
+			{% endfor %}
+		{% endif %}
+	</nav>
+</header>
 
-  <main>
-    {% block section %} {% endblock section %}
-  </main>
+<main>
+	{% block section %} {% endblock section %}
+</main>
 
-  <footer>
-    <h1>Contact Us</h1>
-    {% if page is not defined or page.title != 'Contact' %}
-      <a class="lucid-button mobile" href="/contact">Contact Form ></a>
-    {% endif %}
-    <div class="contact-boxes">
-      {% if page is defined and page.title == 'Contact' %}
-      <form id="contact-form" class="contact-form">
-      {% else %}
-      <form id="contact-form" class="contact-form desktop">
-      {% endif %}
-        <div class="input-row">
-          <div class="input-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" required>
-          </div>
-          <div class="input-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
-          </div>
-        </div>
-        <div class="input-group">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" required></textarea>
-        </div>
-        <input type="submit" value="Submit" class="submit-button">
-        <div id="success-message" class="success-message">Thanks for reaching out! We'll get back to you shortly.</div>
-        <div id="error-message" class="error-message">Something went wrong. Please try again or contact us at <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>.</div>
-      </form>
-      <div class="contact-info">
-        <div class="wordmark">
-          {% include 'svg/wordmark.svg' %}
-        </div>
-        <div class="contact-details">
-          <div class="contact-item">
-            {% include 'svg/lucide-mail.svg' %}
-            <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>
-          </div>
-          <div class="contact-item">
-            {% include 'svg/lucide-phone.svg' %}
-            <a href="tel:{{ CONTACT_PHONE_CLEAN }}">{{ CONTACT_PHONE }}</a>
-          </div>
-          <div class="contact-item">
-            {% include 'svg/lucide-map-pin.svg' %}
-            <span>{{ CONTACT_ADDRESS }}</span>
-          </div>
-        </div>
-        <div class="copyright">
-          <span>{{ SITENAME }} {{ YEAR }}</span>
-        </div>
-      </div>
-    </div>
-  </footer>
+<footer>
+	<h1>Contact Us</h1>
+	{% if page is not defined or page.title != 'Contact' %}
+		<a class="lucid-button mobile" href="/contact">Contact Form ></a>
+	{% endif %}
+	<div class="contact-boxes">
+		{% if page is defined and page.title == 'Contact' %}
+		<form id="contact-form" class="contact-form">
+		{% else %}
+		<form id="contact-form" class="contact-form desktop">
+		{% endif %}
+			<div class="input-row">
+				<div class="input-group">
+					<label for="name">Name</label>
+					<input type="text" id="name" name="name" required>
+				</div>
+				<div class="input-group">
+					<label for="email">Email</label>
+					<input type="email" id="email" name="email" required>
+				</div>
+			</div>
+			<div class="input-group">
+				<label for="message">Message</label>
+				<textarea id="message" name="message" required></textarea>
+			</div>
+			<input type="submit" value="Submit" class="submit-button">
+			<div id="success-message" class="success-message">Thanks for reaching out! We'll get back to you shortly.</div>
+			<div id="error-message" class="error-message">Something went wrong. Please try again or contact us at <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>.</div>
+		</form>
+		<div class="contact-info">
+			<div class="wordmark">
+				{% include 'svg/wordmark.svg' %}
+			</div>
+			<div class="contact-details">
+				<div class="contact-item">
+					{% include 'svg/lucide-mail.svg' %}
+					<a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>
+				</div>
+				<div class="contact-item">
+					{% include 'svg/lucide-phone.svg' %}
+					<a href="tel:{{ CONTACT_PHONE_CLEAN }}">{{ CONTACT_PHONE }}</a>
+				</div>
+				<div class="contact-item">
+					{% include 'svg/lucide-map-pin.svg' %}
+					<span>{{ CONTACT_ADDRESS }}</span>
+				</div>
+			</div>
+			<div class="copyright">
+				<span>{{ SITENAME }} {{ YEAR }}</span>
+			</div>
+		</div>
+	</div>
+</footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('contact-form');
-      const menuCheckbox = document.getElementById('side-menu');
-      const navLinks = document.querySelectorAll('nav a');
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const form = document.getElementById('contact-form');
+		const menuCheckbox = document.getElementById('side-menu');
+		const navLinks = document.querySelectorAll('nav a');
 
-      // Close menu when a navigation link is clicked
-      navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-          menuCheckbox.checked = false;
-        });
-      });
+		// Close menu when a navigation link is clicked
+		navLinks.forEach(link => {
+			link.addEventListener('click', function() {
+				menuCheckbox.checked = false;
+			});
+		});
 
-      form.addEventListener('submit', function(event) {
-        event.preventDefault();
+		form.addEventListener('submit', function(event) {
+			event.preventDefault();
 
-        const formData = {
-        };
-        fetch('https://7x2k2jzqq2.execute-api.ca-central-1.amazonaws.com/prod/contact', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-                  name: document.getElementById('name').value,
-                  email: document.getElementById('email').value,
-                  message: document.getElementById('message').value
-          })
-        })
-        .then(response => {
-          if (response.ok) {
-            return response;
-          }
-          throw new Error('Network response was not ok');
-        })
-        .then(data => {
-          const successMessage = document.getElementById('success-message');
-          successMessage.classList.add('visible');
-          form.reset();
+			const formData = {
+			};
+			fetch('https://7x2k2jzqq2.execute-api.ca-central-1.amazonaws.com/prod/contact', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				body: new URLSearchParams({
+								name: document.getElementById('name').value,
+								email: document.getElementById('email').value,
+								message: document.getElementById('message').value
+				})
+			})
+			.then(response => {
+				if (response.ok) {
+					return response;
+				}
+				throw new Error('Network response was not ok');
+			})
+			.then(data => {
+				const successMessage = document.getElementById('success-message');
+				successMessage.classList.add('visible');
+				form.reset();
 
-          setTimeout(() => {
-            successMessage.classList.remove('visible');
-          }, 15000);
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          const errorMessage = document.getElementById('error-message');
-          errorMessage.classList.add('visible');
-        });
-      });
-    });
-  </script>
+				setTimeout(() => {
+					successMessage.classList.remove('visible');
+				}, 15000);
+			})
+			.catch(error => {
+				console.error('Error:', error);
+				const errorMessage = document.getElementById('error-message');
+				errorMessage.classList.add('visible');
+			});
+		});
+	});
+</script>
 {% endblock content %}
