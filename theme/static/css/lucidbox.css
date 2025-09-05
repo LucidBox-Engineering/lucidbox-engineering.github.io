@@ -176,6 +176,34 @@ h1 {
 	border-bottom: 2px solid var(--accent);
 }
 
+.animated-text {
+	opacity: 0;
+	filter: blur(10px);
+	transform: translateY(15px);
+	animation: unblurSlide 0.8s ease-out forwards;
+}
+
+.animated-text:nth-child(2) {
+	animation-delay: 0.3s;
+}
+
+.landing-services .animated-text {
+	animation-delay: 0.7s;
+}
+
+@keyframes unblurSlide {
+	0% {
+		opacity: 0;
+		filter: blur(10px);
+		transform: translateY(20px);
+	}
+	100% {
+		opacity: 1;
+		filter: blur(0px);
+		transform: translateY(0%);
+	}
+}
+
 .landing-artboard {
 	color: var(--primary-light);
 	background-color: var(--primary-dark);
