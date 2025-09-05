@@ -224,7 +224,8 @@ h1 {
 	padding: 1em 2em;
 	transition:
 		background-position 0.3s cubic-bezier(0.87, 0, 0.13, 1),
-		color 0.3s cubic-bezier(0.87, 0, 0.13, 1);
+		color 0.3s cubic-bezier(0.87, 0, 0.13, 1),
+		transform 0.1s ease;
 	align-self: flex-start;
 }
 
@@ -240,6 +241,11 @@ h1 {
 .submit-button:hover {
 	background-position: 0 100%;
 	color: var(--neutral);
+}
+
+.lucid-button:active,
+.submit-button:active {
+	transform: scale(0.95);
 }
 
 .landing-services {
