@@ -328,7 +328,7 @@ h2 {
 
 .arrow-container .arrow {
 	color: var(--primary-blue);
-	padding-right: 2em;
+	padding-right: 1.5em;
 }
 
 .arrow-container p {
