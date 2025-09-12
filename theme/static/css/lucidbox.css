@@ -181,6 +181,7 @@ h1 {
 	filter: blur(10px);
 	transform: translateY(15px);
 	animation: unblurSlide 0.8s ease-out forwards;
+	z-index: 1;
 }
 
 .animated-text:nth-child(2) {
@@ -817,6 +818,7 @@ footer textarea {
 		padding: 1em 2em;
 		transition: all 0.3s ease-in-out;
 		will-change: backdrop-filter, background-color;
+		z-index: 2;
 	}
 
 	.navbar nav {
