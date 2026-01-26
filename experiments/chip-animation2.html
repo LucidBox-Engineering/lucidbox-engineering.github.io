@@ -1,0 +1,500 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimalist PCB Visualization</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050505; /* Deep dark background */
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="pcbCanvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('pcbCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height;
+    let components = [];
+    let traces = [];
+    let particles = [];
+
+    // Configuration
+    const config = {
+        componentCount: 6,
+        tracesPerSide: 8,
+        traceSpacing: 6, // Space between parallel traces
+        traceColor: 'rgba(0, 255, 200, 0.08)', // Very faint traces
+        traceWidth: 1,
+        particleColor: '#00ffcc',
+        particleSpeedBase: 0.003,
+        particleSize: 1.5,
+        glow: 10
+    };
+
+    // Resize handling
+    function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    }
+    window.addEventListener('resize', () => {
+        resize();
+        init();
+    });
+    resize();
+
+    // Utility: Random range
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    // Class: Component (The chips on the board)
+    class Component {
+        constructor(x, y, w, h) {
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+        }
+
+        draw() {
+            ctx.fillStyle = '#0a0a0a';
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 1;
+
+            // Draw main body
+            ctx.beginPath();
+            ctx.rect(this.x, this.y, this.w, this.h);
+            ctx.fill();
+            ctx.stroke();
+
+            // Draw a subtle "core" square
+            ctx.fillStyle = '#111';
+            const coreSize = Math.min(this.w, this.h) * 0.4;
+            ctx.fillRect(
+                this.x + (this.w - coreSize) / 2, 
+                this.y + (this.h - coreSize) / 2, 
+                coreSize, 
+                coreSize
+            );
+        }
+
+        // Get a random point on the perimeter
+        getPerimeterPoint() {
+            const side = Math.floor(Math.random() * 4);
+            let px, py;
+
+            switch(side) {
+                case 0: // Top
+                    px = this.x + random(0, this.w);
+                    py = this.y;
+                    break;
+                case 1: // Right
+                    px = this.x + this.w;
+                    py = this.y + random(0, this.h);
+                    break;
+                case 2: // Bottom
+                    px = this.x + random(0, this.w);
+                    py = this.y + this.h;
+                    break;
+                case 3: // Left
+                    px = this.x;
+                    py = this.y + random(0, this.h);
+                    break;
+            }
+            return { x: px, y: py };
+        }
+
+        // Get a specific point on a side with an offset ratio (0.0 to 1.0)
+        getPerimeterPointOnSide(side, ratio) {
+            let px, py;
+            switch(side) {
+                case 0: // Top
+                    px = this.x + this.w * ratio;
+                    py = this.y;
+                    break;
+                case 1: // Right
+                    px = this.x + this.w;
+                    py = this.y + this.h * ratio;
+                    break;
+                case 2: // Bottom
+                    px = this.x + this.w * ratio;
+                    py = this.y + this.h;
+                    break;
+                case 3: // Left
+                    px = this.x;
+                    py = this.y + this.h * ratio;
+                    break;
+            }
+            return { x: px, y: py };
+        }
+    }
+
+    // Class: Trace (The path lines)
+    class Trace {
+        constructor(startPoint, endPoint, options = {}) {
+            this.traceIndex = options.traceIndex || 0;
+            this.totalTraces = options.totalTraces || 1;
+            this.exitDirection = options.exitDirection || 'auto';
+            this.points = this.generatePath(startPoint, endPoint, options);
+            this.length = this.calculateLength();
+        }
+
+        generatePath(p1, p2, options = {}) {
+            // PCB-style routing with fan-out pattern:
+            // 1. All traces start parallel from the chip
+            // 2. Each trace bends 90 degrees at a staggered distance
+            // 3. Traces fan out/separate after the bend
+
+            const path = [];
+            const traceIndex = options.traceIndex || 0;
+            const totalTraces = options.totalTraces || 1;
+
+            // Calculate direction
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+
+            // Determine exit direction based on which side of the chip
+            let exitDir = options.exitDirection || 'auto';
+            if (exitDir === 'auto') {
+                exitDir = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical';
+            }
+
+            // Check if this is an off-screen trace (destination is beyond canvas)
+            const isOffScreen = p2.x < 0 || p2.x > width || p2.y < 0 || p2.y > height;
+
+            // Base extension distance before first bend
+            const baseExtension = 40;
+            // Stagger increment - each trace bends at a different distance
+            const staggerIncrement = 15;
+            // Fan spread - how much traces separate after bending
+            const fanSpread = 25;
+
+            // Start point
+            path.push({ x: p1.x, y: p1.y });
+
+            // Calculate bend distance - outer traces bend later
+            const centerIndex = (totalTraces - 1) / 2;
+            const offsetFromCenter = traceIndex - centerIndex;
+            const bendDistance = baseExtension + Math.abs(offsetFromCenter) * staggerIncrement;
+
+            if (isOffScreen) {
+                // Off-screen routing: traces start parallel, bend 90 degrees, fan out
+
+                if (exitDir === 'left' || exitDir === 'right') {
+                    const dirX = exitDir === 'left' ? -1 : 1;
+
+                    // First segment: extend horizontally (all traces parallel)
+                    const bendX = p1.x + dirX * bendDistance;
+                    path.push({ x: bendX, y: p1.y });
+
+                    // 90-degree bend: turn and fan out vertically
+                    const fanOffset = offsetFromCenter * fanSpread;
+                    const finalY = p1.y + fanOffset;
+                    path.push({ x: bendX, y: finalY });
+
+                    // Continue to edge at the fanned-out position
+                    path.push({ x: p2.x, y: finalY });
+
+                } else if (exitDir === 'up' || exitDir === 'down') {
+                    const dirY = exitDir === 'up' ? -1 : 1;
+
+                    // First segment: extend vertically (all traces parallel)
+                    const bendY = p1.y + dirY * bendDistance;
+                    path.push({ x: p1.x, y: bendY });
+
+                    // 90-degree bend: turn and fan out horizontally
+                    const fanOffset = offsetFromCenter * fanSpread;
+                    const finalX = p1.x + fanOffset;
+                    path.push({ x: finalX, y: bendY });
+
+                    // Continue to edge at the fanned-out position
+                    path.push({ x: finalX, y: p2.y });
+                }
+            } else {
+                // Inter-component routing: start parallel, bend to fan out, converge at destination
+
+                if (exitDir === 'horizontal' || exitDir === 'left' || exitDir === 'right') {
+                    const dirX = exitDir === 'left' ? -1 : (exitDir === 'right' ? 1 : Math.sign(dx));
+
+                    // First segment: extend horizontally (parallel with other traces)
+                    const bendX = p1.x + dirX * bendDistance;
+                    path.push({ x: bendX, y: p1.y });
+
+                    // 90-degree bend: turn vertically, fanning out
+                    const fanOffset = offsetFromCenter * fanSpread * 0.5;
+                    const midY = (p1.y + p2.y) / 2 + fanOffset;
+                    path.push({ x: bendX, y: midY });
+
+                    // Second bend: turn back toward destination
+                    const endBendX = p2.x - dirX * bendDistance;
+                    path.push({ x: endBendX, y: midY });
+
+                    // Final approach: converge at destination
+                    path.push({ x: endBendX, y: p2.y });
+                    path.push({ x: p2.x, y: p2.y });
+
+                } else {
+                    // Vertical exit from chip (top or bottom)
+                    const dirY = exitDir === 'up' ? -1 : (exitDir === 'down' ? 1 : Math.sign(dy));
+
+                    // First segment: extend vertically (parallel with other traces)
+                    const bendY = p1.y + dirY * bendDistance;
+                    path.push({ x: p1.x, y: bendY });
+
+                    // 90-degree bend: turn horizontally, fanning out
+                    const fanOffset = offsetFromCenter * fanSpread * 0.5;
+                    const midX = (p1.x + p2.x) / 2 + fanOffset;
+                    path.push({ x: midX, y: bendY });
+
+                    // Second bend: turn back toward destination
+                    const endBendY = p2.y - dirY * bendDistance;
+                    path.push({ x: midX, y: endBendY });
+
+                    // Final approach: converge at destination
+                    path.push({ x: p2.x, y: endBendY });
+                    path.push({ x: p2.x, y: p2.y });
+                }
+            }
+
+            return path;
+        }
+
+        calculateLength() {
+            let dist = 0;
+            for (let i = 0; i < this.points.length - 1; i++) {
+                const p1 = this.points[i];
+                const p2 = this.points[i+1];
+                dist += Math.hypot(p2.x - p1.x, p2.y - p1.y);
+            }
+            return dist;
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.strokeStyle = config.traceColor;
+            ctx.lineWidth = config.traceWidth;
+
+            ctx.moveTo(this.points[0].x, this.points[0].y);
+            for (let i = 1; i < this.points.length; i++) {
+                ctx.lineTo(this.points[i].x, this.points[i].y);
+            }
+            ctx.stroke();
+        }
+
+        // Get coordinates at a specific progress (0.0 to 1.0)
+        getPointAt(progress) {
+            const targetDist = this.length * progress;
+            let currentDist = 0;
+
+            for (let i = 0; i < this.points.length - 1; i++) {
+                const p1 = this.points[i];
+                const p2 = this.points[i+1];
+                const segmentDist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+
+                if (currentDist + segmentDist >= targetDist) {
+                    const segmentProgress = (targetDist - currentDist) / segmentDist;
+                    return {
+                        x: p1.x + (p2.x - p1.x) * segmentProgress,
+                        y: p1.y + (p2.y - p1.y) * segmentProgress
+                    };
+                }
+                currentDist += segmentDist;
+            }
+            return this.points[this.points.length - 1];
+        }
+    }
+
+    // Class: Particle (The data)
+    class Particle {
+        constructor(trace) {
+            this.trace = trace;
+            this.progress = Math.random(); // Start at random position
+            this.speed = random(config.particleSpeedBase, config.particleSpeedBase * 2);
+            this.offset = random(-1, 1); // Slight jitter for visual width
+        }
+
+        update() {
+            this.progress += this.speed;
+            if (this.progress >= 1) {
+                this.progress = 0;
+            }
+        }
+
+        draw() {
+            const pos = this.trace.getPointAt(this.progress);
+
+            ctx.fillStyle = config.particleColor;
+            ctx.shadowBlur = config.glow;
+            ctx.shadowColor = config.particleColor;
+
+            ctx.beginPath();
+            // Draw a small rectangle or circle
+            ctx.arc(pos.x + this.offset, pos.y + this.offset, config.particleSize, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Reset shadow for performance
+            ctx.shadowBlur = 0;
+        }
+    }
+
+    // Helper: Create a bundle of parallel traces from one side
+    function createTraceBundleOffScreen(comp, side, numTraces) {
+        const spacing = config.traceSpacing;
+        const exitDirections = ['up', 'right', 'down', 'left'];
+        const exitDir = exitDirections[side];
+
+        for (let i = 0; i < numTraces; i++) {
+            // Evenly space connection points along the side
+            const ratio = (i + 1) / (numTraces + 1);
+            const startPoint = comp.getPerimeterPointOnSide(side, ratio);
+
+            let endPoint;
+            switch(side) {
+                case 0: // Top
+                    endPoint = { x: startPoint.x, y: -50 };
+                    break;
+                case 1: // Right
+                    endPoint = { x: width + 50, y: startPoint.y };
+                    break;
+                case 2: // Bottom
+                    endPoint = { x: startPoint.x, y: height + 50 };
+                    break;
+                case 3: // Left
+                    endPoint = { x: -50, y: startPoint.y };
+                    break;
+            }
+
+            // Create trace with staggered routing
+            const trace = new Trace(startPoint, endPoint, {
+                traceIndex: i,
+                totalTraces: numTraces,
+                exitDirection: exitDir
+            });
+            traces.push(trace);
+
+            // Add particles
+            const numParticles = 2;
+            for (let k = 0; k < numParticles; k++) {
+                particles.push(new Particle(trace));
+            }
+        }
+    }
+
+    // Helper: Create traces connecting two components on specific sides
+    function createInterComponentTraces(compA, sideA, compB, sideB, numTraces) {
+        const exitDirections = ['up', 'right', 'down', 'left'];
+
+        for (let i = 0; i < numTraces; i++) {
+            // Evenly space connection points along the sides
+            const ratio = (i + 1) / (numTraces + 1);
+            const pA = compA.getPerimeterPointOnSide(sideA, ratio);
+            const pB = compB.getPerimeterPointOnSide(sideB, ratio);
+
+            const trace = new Trace(pA, pB, {
+                traceIndex: i,
+                totalTraces: numTraces,
+                exitDirection: exitDirections[sideA]
+            });
+            traces.push(trace);
+
+            // Add particles
+            const numParticles = 3;
+            for (let k = 0; k < numParticles; k++) {
+                particles.push(new Particle(trace));
+            }
+        }
+    }
+
+    // Initialization Logic
+    function init() {
+        components = [];
+        traces = [];
+        particles = [];
+
+        const numTracesPerSide = config.tracesPerSide;
+
+        // Create exactly 2 static components
+        // Chip 1: Left side
+        components.push(new Component(
+            width * 0.2,
+            height / 2 - 40,
+            80,
+            80
+        ));
+
+        // Chip 2: Right side
+        components.push(new Component(
+            width * 0.7,
+            height / 2 - 40,
+            80,
+            80
+        ));
+
+        const leftChip = components[0];
+        const rightChip = components[1];
+
+        // Create inter-component traces (right side of left chip to left side of right chip)
+        createInterComponentTraces(leftChip, 1, rightChip, 3, numTracesPerSide);
+
+        // Create off-screen traces for left chip
+        // Top side
+        createTraceBundleOffScreen(leftChip, 0, numTracesPerSide);
+        // Bottom side
+        createTraceBundleOffScreen(leftChip, 2, numTracesPerSide);
+        // Left side (going off-screen left)
+        createTraceBundleOffScreen(leftChip, 3, numTracesPerSide);
+
+        // Create off-screen traces for right chip
+        // Top side
+        createTraceBundleOffScreen(rightChip, 0, numTracesPerSide);
+        // Bottom side
+        createTraceBundleOffScreen(rightChip, 2, numTracesPerSide);
+        // Right side (going off-screen right)
+        createTraceBundleOffScreen(rightChip, 1, numTracesPerSide);
+    }
+
+    // Animation Loop
+    function animate() {
+        // Clear screen with a very slight fade for trail effect (optional, strictly clearing here for minimalism)
+        ctx.clearRect(0, 0, width, height);
+
+        // Draw Traces
+        traces.forEach(trace => trace.draw());
+
+        // Update and Draw Particles (drawn before components so they appear behind)
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+
+        // Draw Components
+        components.forEach(comp => comp.draw());
+
+        requestAnimationFrame(animate);
+    }
+
+    // Start
+    init();
+    animate();
+
+</script>
+</body>
+</html>

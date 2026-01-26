@@ -1,418 +1,512 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PCB Circuit Animation</title>
+    <title>Chip Communication Animation</title>
     <style>
-    :root {
-  --neutral: white;
-  --neutral-alt: #fafafa;
-  --accent: #01ffa6;
-  --primary-dark: #0e2032;
-  --primary-light: #eeeeee;
-  --primary-blue: #001aff;
-  --secondary-light: #727272;
-  --secondary-blue: #4ed7f9;
-  --primary-gradient: linear-gradient(
-    to bottom right,
-    var(--primary-dark),
-    var(--primary-blue),
-    var(--secondary-blue)
-  );
-}
-
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--primary-dark);
+            background-color: #050505;
             overflow: hidden;
-            font-family: 'Arial', sans-serif;
-        }
-
-        .pcb-container {
-            position: relative;
-            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
         }
 
-        .chip {
-            position: absolute;
-            background: var(--primary-dark);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            box-shadow:
-                0 0 30px rgba(1, 255, 166, 0.3),
-                0 0 60px rgba(1, 255, 166, 0.2),
-                0 0 90px rgba(1, 255, 166, 0.1),
-                inset 0 0 20px rgba(1, 255, 166, 0.1);
-        }
-
-        .chip-large {
-            width: 120px;
-            height: 120px;
-            top: 40%;
-            left: 30%;
-            transform: translate(-50%, -50%);
-        }
-
-        .chip-small {
-            width: 80px;
-            height: 80px;
-            top: 60%;
-            left: 70%;
-            transform: translate(-50%, -50%);
-        }
-
-        .trace {
-            position: absolute;
-            stroke: rgba(180, 180, 180, 0.4);
-            stroke-width: 3;
-            fill: none;
-            pointer-events: none;
-        }
-
-        .light {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: #aaaaaa;
-            border-radius: 50%;
-            box-shadow:
-                0 0 15px #00ff88,
-                0 0 30px #00ff88,
-                0 0 45px rgba(0, 255, 136, 0.5);
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .light.variant-1 {
-            background: #aaaaaa;
-            box-shadow:
-                0 0 15px #00aaff,
-                0 0 30px #00aaff,
-                0 0 45px rgba(0, 170, 255, 0.5);
-        }
-
-        .light.variant-2 {
-            background: #aaaaaa;
-            box-shadow:
-                0 0 15px #ff6b35,
-                0 0 30px #ff6b35,
-                0 0 45px rgba(255, 107, 53, 0.5);
-        }
-
-        .light.variant-3 {
-            background: #aaaaaa0;
-            box-shadow:
-                0 0 15px #ffd700,
-                0 0 30px #ffd700,
-                0 0 45px rgba(255, 215, 0, 0.5);
-        }
-
-        svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
+        canvas {
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
     </style>
-
-    <script src="https://kalabasa.github.io/simple-live-reload/script.js"></script>
-
 </head>
+
 <body>
-    <div class="pcb-container">
-        <svg id="traces"></svg>
-        <div class="chip chip-large"></div>
-        <div class="chip chip-small"></div>
-    </div>
+    <canvas id="chipCanvas"></canvas>
 
     <script>
-        class PCBAnimation {
-            constructor() {
-                this.container = document.querySelector('.pcb-container');
-                this.svg = document.getElementById('traces');
-                this.lights = [];
-                this.traces = [];
-                this.chipPositions = {
-                    large: { x: window.innerWidth * 0.3, y: window.innerHeight * 0.4 },
-                    small: { x: window.innerWidth * 0.7, y: window.innerHeight * 0.6 }
-                };
-                this.init();
-            }
+        const canvas = document.getElementById('chipCanvas');
+        const ctx = canvas.getContext('2d');
 
-            init() {
-                this.createTraces();
-                this.startAnimation();
-                this.handleResize();
-            }
+        let width, height;
+        let chips = [];
+        let traces = [];
+        let packets = [];
 
-            createTraces() {
-                const traces = [
-                    // Traces from large chip
-                    {
-                        path: this.createPath(
-                            this.chipPositions.large.x - 60, this.chipPositions.large.y,
-                            this.chipPositions.large.x - 200, this.chipPositions.large.y,
-                            this.chipPositions.large.x - 300, this.chipPositions.large.y - 100,
-                            -100, this.chipPositions.large.y - 100
-                        ),
-                        speed: 2.5
-                    },
-                    {
-                        path: this.createPath(
-                            this.chipPositions.large.x + 60, this.chipPositions.large.y,
-                            this.chipPositions.large.x + 150, this.chipPositions.large.y,
-                            this.chipPositions.large.x + 200, this.chipPositions.large.y + 80,
-                            this.chipPositions.small.x - 40, this.chipPositions.small.y
-                        ),
-                        speed: 3
-                    },
-                    {
-                        path: this.createPath(
-                            this.chipPositions.large.x, this.chipPositions.large.y - 60,
-                            this.chipPositions.large.x, this.chipPositions.large.y - 150,
-                            this.chipPositions.large.x + 100, this.chipPositions.large.y - 200,
-                            this.chipPositions.large.x + 300, this.chipPositions.large.y - 200,
-                            window.innerWidth + 100, this.chipPositions.large.y - 200
-                        ),
-                        speed: 2.8
-                    },
-                    {
-                        path: this.createPath(
-                            this.chipPositions.large.x, this.chipPositions.large.y + 60,
-                            this.chipPositions.large.x, this.chipPositions.large.y + 150,
-                            this.chipPositions.large.x - 150, this.chipPositions.large.y + 200,
-                            -100, this.chipPositions.large.y + 200
-                        ),
-                        speed: 2.2
-                    },
-                    {
-                        path: this.createPath(
-                            this.chipPositions.large.x - 42, this.chipPositions.large.y - 42,
-                            this.chipPositions.large.x - 100, this.chipPositions.large.y - 100,
-                            this.chipPositions.large.x - 200, this.chipPositions.large.y - 50,
-                            this.chipPositions.large.x - 300, this.chipPositions.large.y + 50,
-                            -100, this.chipPositions.large.y + 50
-                        ),
-                        speed: 2.6
-                    },
-                    // Traces from small chip
-                    {
-                        path: this.createPath(
-                            this.chipPositions.small.x + 40, this.chipPositions.small.y,
-                            this.chipPositions.small.x + 150, this.chipPositions.small.y,
-                            this.chipPositions.small.x + 200, this.chipPositions.small.y - 80,
-                            window.innerWidth + 100, this.chipPositions.small.y - 80
-                        ),
-                        speed: 3.2
-                    },
-                    {
-                        path: this.createPath(
-                            this.chipPositions.small.x, this.chipPositions.small.y - 40,
-                            this.chipPositions.small.x, this.chipPositions.small.y - 120,
-                            this.chipPositions.small.x + 100, this.chipPositions.small.y - 180,
-                            window.innerWidth + 100, this.chipPositions.small.y - 180
-                        ),
-                        speed: 2.7
-                    },
-                    {
-                        path: this.createPath(
-                            this.chipPositions.small.x, this.chipPositions.small.y + 40,
-                            this.chipPositions.small.x, this.chipPositions.small.y + 120,
-                            this.chipPositions.small.x - 80, this.chipPositions.small.y + 180,
-                            -100, this.chipPositions.small.y + 180
-                        ),
-                        speed: 2.4
-                    },
-                    {
-                        path: this.createPath(
-                            this.chipPositions.small.x - 40, this.chipPositions.small.y,
-                            this.chipPositions.small.x - 120, this.chipPositions.small.y,
-                            this.chipPositions.small.x - 180, this.chipPositions.small.y + 60,
-                            -100, this.chipPositions.small.y + 60
-                        ),
-                        speed: 2.9
-                    },
-                    {
-                        path: this.createPath(
-                            this.chipPositions.small.x + 28, this.chipPositions.small.y + 28,
-                            this.chipPositions.small.x + 100, this.chipPositions.small.y + 100,
-                            this.chipPositions.small.x + 200, this.chipPositions.small.y + 150,
-                            window.innerWidth + 100, this.chipPositions.small.y + 150
-                        ),
-                        speed: 3.1
-                    }
-                ];
+        // Grid settings
+        const gridSize = 20;
+        let gridWidth, gridHeight;
+        let grid = []; // 2D array: true = occupied
 
-                // Create SVG paths
-                traces.forEach((trace, index) => {
-                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                    path.setAttribute('d', trace.path);
-                    path.setAttribute('class', 'trace');
-                    this.svg.appendChild(path);
-                    this.traces.push({ element: path, speed: trace.speed, pathData: trace.path });
-                });
-            }
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
 
-            createPath(...points) {
-                if (points.length < 4) return '';
+            gridWidth = Math.ceil(width / gridSize);
+            gridHeight = Math.ceil(height / gridSize);
 
-                let path = `M ${points[0]} ${points[1]}`;
-                const cornerRadius = 20;
+            init();
+        }
 
-                for (let i = 2; i < points.length; i += 2) {
-                    if (i + 1 < points.length) {
-                        const prevX = points[i - 2];
-                        const prevY = points[i - 1];
-                        const currX = points[i];
-                        const currY = points[i + 1];
+        class Chip {
+            constructor(x, y, w, h) {
+                // Snap to grid
+                this.gridX = Math.round(x / gridSize);
+                this.gridY = Math.round(y / gridSize);
+                this.gridW = Math.round(w / gridSize);
+                this.gridH = Math.round(h / gridSize);
 
-                        // For the last point, just draw a straight line
-                        if (i + 2 >= points.length) {
-                            path += ` L ${currX} ${currY}`;
-                            continue;
-                        }
+                this.x = this.gridX * gridSize;
+                this.y = this.gridY * gridSize;
+                this.w = this.gridW * gridSize;
+                this.h = this.gridH * gridSize;
 
-                        const nextX = points[i + 2];
-                        const nextY = points[i + 3];
+                this.color = '#00ffcc'; // Cyan glow
 
-                        // Calculate direction vectors
-                        const dx1 = currX - prevX;
-                        const dy1 = currY - prevY;
-                        const dx2 = nextX - currX;
-                        const dy2 = nextY - currY;
-
-                        // Normalize vectors
-                        const len1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
-                        const len2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-
-                        if (len1 === 0 || len2 === 0) {
-                            path += ` L ${currX} ${currY}`;
-                            continue;
-                        }
-
-                        const unit1X = dx1 / len1;
-                        const unit1Y = dy1 / len1;
-                        const unit2X = dx2 / len2;
-                        const unit2Y = dy2 / len2;
-
-                        // Check if we need a corner (not a straight line)
-                        const dotProduct = unit1X * unit2X + unit1Y * unit2Y;
-                        const isCorner = Math.abs(dotProduct) < 0.99; // Allow for small floating point errors
-
-                        if (isCorner) {
-                            // Calculate the actual corner radius based on available space
-                            const actualRadius = Math.min(cornerRadius, len1 * 0.4, len2 * 0.4);
-
-                            // Calculate points for the rounded corner
-                            const cornerStartX = currX - unit1X * actualRadius;
-                            const cornerStartY = currY - unit1Y * actualRadius;
-                            const cornerEndX = currX + unit2X * actualRadius;
-                            const cornerEndY = currY + unit2Y * actualRadius;
-
-                            // Draw line to corner start
-                            path += ` L ${cornerStartX} ${cornerStartY}`;
-
-                            // Draw rounded corner using quadratic curve
-                            path += ` Q ${currX} ${currY} ${cornerEndX} ${cornerEndY}`;
-                        } else {
-                            // Straight line, no corner needed
-                            path += ` L ${currX} ${currY}`;
+                // Mark grid as occupied
+                // Add some padding so traces don't touch the chip body except at ports
+                for (let i = this.gridX - 1; i <= this.gridX + this.gridW; i++) {
+                    for (let j = this.gridY - 1; j <= this.gridY + this.gridH; j++) {
+                        if (i >= 0 && i < gridWidth && j >= 0 && j < gridHeight) {
+                            grid[i][j] = true;
                         }
                     }
                 }
-
-                return path;
             }
 
-            createLight(traceIndex) {
-                const light = document.createElement('div');
-                light.className = `light variant-${Math.floor(Math.random() * 4)}`;
-                this.container.appendChild(light);
+            draw() {
+                ctx.save();
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 2;
+                ctx.shadowColor = this.color;
+                ctx.shadowBlur = 15;
 
-                const trace = this.traces[traceIndex];
-                const pathElement = trace.element;
-                const pathLength = pathElement.getTotalLength();
+                // Draw chip outline
+                ctx.strokeRect(this.x, this.y, this.w, this.h);
 
-                const lightData = {
-                    element: light,
-                    path: pathElement,
-                    pathLength: pathLength,
-                    progress: 0,
-                    speed: trace.speed + (Math.random() - 0.5) * 0.5,
-                    traceIndex: traceIndex
-                };
+                // Inner details
+                ctx.lineWidth = 1;
+                ctx.globalAlpha = 0.3;
 
-                this.lights.push(lightData);
-            }
+                // Tech-y pattern inside
+                const innerGap = 10;
+                ctx.beginPath();
+                ctx.rect(this.x + innerGap, this.y + innerGap, this.w - innerGap * 2, this.h - innerGap * 2);
+                ctx.stroke();
 
-            updateLights() {
-                this.lights.forEach((light, index) => {
-                    light.progress += light.speed;
-
-                    if (light.progress >= light.pathLength) {
-                        light.element.remove();
-                        this.lights.splice(index, 1);
-                        return;
+                // Pins
+                ctx.beginPath();
+                for (let i = 0; i < this.w; i += 20) {
+                    if (i > 5 && i < this.w - 5) {
+                        ctx.moveTo(this.x + i, this.y);
+                        ctx.lineTo(this.x + i, this.y + 5);
+                        ctx.moveTo(this.x + i, this.y + this.h);
+                        ctx.lineTo(this.x + i, this.y + this.h - 5);
                     }
-
-                    const point = light.path.getPointAtLength(light.progress);
-                    light.element.style.left = (point.x - 3) + 'px';
-                    light.element.style.top = (point.y - 3) + 'px';
-
-                    // Fade out as light approaches end
-                    const fadeStart = light.pathLength * 0.8;
-                    if (light.progress > fadeStart) {
-                        const fadeProgress = (light.progress - fadeStart) / (light.pathLength - fadeStart);
-                        light.element.style.opacity = 1 - fadeProgress;
+                }
+                for (let i = 0; i < this.h; i += 20) {
+                    if (i > 5 && i < this.h - 5) {
+                        ctx.moveTo(this.x, this.y + i);
+                        ctx.lineTo(this.x + 5, this.y + i);
+                        ctx.moveTo(this.x + this.w, this.y + i);
+                        ctx.lineTo(this.x + this.w - 5, this.y + i);
                     }
-                });
+                }
+                ctx.stroke();
+
+                ctx.restore();
             }
 
-            startAnimation() {
-                const animate = () => {
-                    this.updateLights();
+            getPerimeterPoint() {
+                // Return a random point on the perimeter that is on the grid
+                const side = Math.floor(Math.random() * 4);
+                let gx, gy;
 
-                    // Spawn new lights randomly
-                    if (Math.random() < 0.15) {
-                        const traceIndex = Math.floor(Math.random() * this.traces.length);
-                        this.createLight(traceIndex);
-                    }
-
-                    requestAnimationFrame(animate);
-                };
-
-                animate();
-            }
-
-            handleResize() {
-                window.addEventListener('resize', () => {
-                    this.chipPositions = {
-                        large: { x: window.innerWidth * 0.3, y: window.innerHeight * 0.4 },
-                        small: { x: window.innerWidth * 0.7, y: window.innerHeight * 0.6 }
-                    };
-
-                    // Clear existing traces and lights
-                    this.svg.innerHTML = '';
-                    this.lights.forEach(light => light.element.remove());
-                    this.lights = [];
-                    this.traces = [];
-
-                    // Recreate traces
-                    this.createTraces();
-                });
+                switch (side) {
+                    case 0: // Top
+                        gx = this.gridX + Math.floor(Math.random() * this.gridW);
+                        gy = this.gridY;
+                        break;
+                    case 1: // Right
+                        gx = this.gridX + this.gridW;
+                        gy = this.gridY + Math.floor(Math.random() * this.gridH);
+                        break;
+                    case 2: // Bottom
+                        gx = this.gridX + Math.floor(Math.random() * this.gridW);
+                        gy = this.gridY + this.gridH;
+                        break;
+                    case 3: // Left
+                        gx = this.gridX;
+                        gy = this.gridY + Math.floor(Math.random() * this.gridH);
+                        break;
+                }
+                return { x: gx, y: gy };
             }
         }
 
-        // Initialize animation when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            new PCBAnimation();
-        });
+        class Trace {
+            constructor(startGrid, endGrid) {
+                this.path = this.findPath(startGrid, endGrid);
+                if (this.path) {
+                    this.geometry = this.createGeometry(this.path);
+                    this.markGrid(this.path);
+                } else {
+                    this.geometry = [];
+                }
+            }
+
+            findPath(start, end) {
+                // A* with turn penalties to encourage straight lines
+                // Priority Queue would be better, but simple array sort is fine for this grid size
+                const openSet = [];
+                const startNode = {
+                    x: start.x,
+                    y: start.y,
+                    g: 0,
+                    h: Math.abs(end.x - start.x) + Math.abs(end.y - start.y),
+                    parent: null,
+                    dx: 0,
+                    dy: 0
+                };
+                startNode.f = startNode.g + startNode.h;
+                openSet.push(startNode);
+
+                const closedSet = new Map(); // key: "x,y", value: g
+
+                const turnPenalty = 5; // High penalty for turning
+
+                while (openSet.length > 0) {
+                    // Sort by f (lowest first)
+                    openSet.sort((a, b) => a.f - b.f);
+                    const current = openSet.shift();
+
+                    const key = `${current.x},${current.y}`;
+                    if (closedSet.has(key) && closedSet.get(key) <= current.g) {
+                        continue;
+                    }
+                    closedSet.set(key, current.g);
+
+                    if (current.x === end.x && current.y === end.y) {
+                        return this.reconstructPath(current);
+                    }
+
+                    const neighbors = [
+                        { x: current.x + 1, y: current.y, dx: 1, dy: 0 },
+                        { x: current.x - 1, y: current.y, dx: -1, dy: 0 },
+                        { x: current.x, y: current.y + 1, dx: 0, dy: 1 },
+                        { x: current.x, y: current.y - 1, dx: 0, dy: -1 }
+                    ];
+
+                    for (const n of neighbors) {
+                        if (n.x >= 0 && n.x < gridWidth && n.y >= 0 && n.y < gridHeight) {
+                            // Check collision
+                            const isEnd = (n.x === end.x && n.y === end.y);
+                            if (!grid[n.x][n.y] || isEnd) {
+                                // Calculate cost
+                                let newG = current.g + 1;
+
+                                // Add penalty if changing direction
+                                // If current.dx is 0 (start), no penalty
+                                if (current.dx !== 0 || current.dy !== 0) {
+                                    if (n.dx !== current.dx || n.dy !== current.dy) {
+                                        newG += turnPenalty;
+                                    }
+                                }
+
+                                const h = Math.abs(end.x - n.x) + Math.abs(end.y - n.y);
+                                const newNode = {
+                                    x: n.x,
+                                    y: n.y,
+                                    g: newG,
+                                    h: h,
+                                    f: newG + h,
+                                    parent: current,
+                                    dx: n.dx,
+                                    dy: n.dy
+                                };
+
+                                // Check if we found a better path to this node
+                                // Note: In strict A* with turns, state should include direction. 
+                                // But for simple PCB, just x,y check is usually "good enough" to avoid loops,
+                                // though it might miss the optimal path if arriving from a different direction is better.
+                                // Let's stick to x,y check for performance, it usually produces good results.
+                                const nKey = `${n.x},${n.y}`;
+                                if (!closedSet.has(nKey) || closedSet.get(nKey) > newG) {
+                                    openSet.push(newNode);
+                                }
+                            }
+                        }
+                    }
+                }
+                return null;
+            }
+
+            reconstructPath(node) {
+                const path = [];
+                let curr = node;
+                while (curr) {
+                    path.unshift({ x: curr.x, y: curr.y });
+                    curr = curr.parent;
+                }
+                return path;
+            }
+
+            markGrid(path) {
+                for (const p of path) {
+                    grid[p.x][p.y] = true;
+                }
+            }
+
+            createGeometry(path) {
+                if (path.length < 2) return [];
+
+                const commands = [];
+                const radius = gridSize / 2;
+
+                let current = { x: path[0].x * gridSize, y: path[0].y * gridSize };
+                commands.push({ type: 'move', x: current.x, y: current.y });
+
+                for (let i = 1; i < path.length - 1; i++) {
+                    const prev = path[i - 1];
+                    const curr = path[i];
+                    const next = path[i + 1];
+
+                    const p1 = { x: curr.x * gridSize, y: curr.y * gridSize };
+                    const p2 = { x: next.x * gridSize, y: next.y * gridSize };
+
+                    const dx1 = curr.x - prev.x;
+                    const dy1 = curr.y - prev.y;
+                    const dx2 = next.x - curr.x;
+                    const dy2 = next.y - curr.y;
+
+                    if (dx1 !== dx2 || dy1 !== dy2) {
+                        commands.push({ type: 'lineTo', x: p1.x, y: p1.y, radius: radius, nextX: p2.x, nextY: p2.y });
+                    }
+                }
+
+                const last = path[path.length - 1];
+                commands.push({ type: 'final', x: last.x * gridSize, y: last.y * gridSize });
+
+                return commands;
+            }
+
+            draw() {
+                if (!this.path || this.path.length < 2) return;
+
+                ctx.save();
+                ctx.strokeStyle = 'rgba(0, 255, 204, 0.03)'; // Much fainter
+                ctx.lineWidth = 1.5;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+
+                ctx.beginPath();
+
+                // Draw smooth path
+                // We use the points directly.
+                // To get smooth corners, we use arcTo between segments.
+                // We need to iterate and find corners.
+
+                const pts = this.path.map(p => ({ x: p.x * gridSize, y: p.y * gridSize }));
+                const radius = 10;
+
+                ctx.moveTo(pts[0].x, pts[0].y);
+
+                for (let i = 1; i < pts.length - 1; i++) {
+                    const p1 = pts[i];
+                    const p2 = pts[i + 1];
+                    ctx.arcTo(p1.x, p1.y, p2.x, p2.y, radius);
+                }
+
+                ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // Helper to get position for packet
+            // This is an approximation that follows grid lines exactly (sharp corners)
+            // To do smooth packet movement would require complex math to map 't' to the arc segments.
+            // For this visual, sharp turns for the packet might actually look "digital" and fine, 
+            // or we can just lerp.
+            getPointAt(t) {
+                if (!this.path || this.path.length < 2) return null;
+
+                const totalPoints = this.path.length;
+                const floatIndex = t * (totalPoints - 1);
+                const index = Math.floor(floatIndex);
+                const localT = floatIndex - index;
+
+                if (index >= totalPoints - 1) {
+                    const p = this.path[totalPoints - 1];
+                    return { x: p.x * gridSize, y: p.y * gridSize };
+                }
+
+                const p1 = this.path[index];
+                const p2 = this.path[index + 1];
+
+                return {
+                    x: (p1.x + (p2.x - p1.x) * localT) * gridSize,
+                    y: (p1.y + (p2.y - p1.y) * localT) * gridSize
+                };
+            }
+        }
+
+        class Packet {
+            constructor(trace) {
+                this.trace = trace;
+                this.progress = 0;
+                this.speed = 0.01 + Math.random() * 0.01;
+                this.size = 3;
+                this.tailLength = 8;
+                this.history = [];
+            }
+
+            update() {
+                this.progress += this.speed;
+                if (this.progress >= 1) return false;
+
+                const pos = this.trace.getPointAt(this.progress);
+                if (pos) {
+                    this.history.push(pos);
+                    if (this.history.length > this.tailLength) {
+                        this.history.shift();
+                    }
+                }
+                return true;
+            }
+
+            draw() {
+                if (this.history.length < 2) return;
+
+                ctx.save();
+                ctx.lineCap = 'round';
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = '#00ffcc';
+
+                for (let i = 0; i < this.history.length - 1; i++) {
+                    const p1 = this.history[i];
+                    const p2 = this.history[i + 1];
+                    const alpha = (i / this.history.length);
+
+                    ctx.strokeStyle = `rgba(0, 255, 204, ${alpha})`;
+                    ctx.lineWidth = this.size * alpha;
+
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+
+                const head = this.history[this.history.length - 1];
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(head.x, head.y, this.size / 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        function init() {
+            // Reset grid
+            grid = new Array(gridWidth).fill(0).map(() => new Array(gridHeight).fill(false));
+            chips = [];
+            traces = [];
+            packets = [];
+
+            // Create Chips
+            // Chip 1: Large
+            const c1W = 160;
+            const c1H = 200;
+            const c1 = new Chip(width * 0.3 - c1W / 2, height / 2 - c1H / 2, c1W, c1H);
+            chips.push(c1);
+
+            // Chip 2: Small
+            const c2W = 80;
+            const c2H = 80;
+            const c2 = new Chip(width * 0.7 - c2W / 2, height / 2 - c2H / 2, c2W, c2H);
+            chips.push(c2);
+
+            // Create Traces
+            // Attempt to create N traces
+            let attempts = 0;
+            const maxAttempts = 100;
+            let created = 0;
+            const targetTraces = 15;
+
+            while (created < targetTraces && attempts < maxAttempts) {
+                attempts++;
+
+                // Decide connection type
+                const type = Math.random();
+                let start, end;
+
+                if (type < 0.4) {
+                    // Chip to Chip
+                    start = c1.getPerimeterPoint();
+                    end = c2.getPerimeterPoint();
+                } else if (type < 0.7) {
+                    // Chip 1 to World
+                    start = c1.getPerimeterPoint();
+                    // Random edge point
+                    const edge = Math.floor(Math.random() * 4);
+                    if (edge === 0) end = { x: Math.floor(Math.random() * gridWidth), y: 0 };
+                    else if (edge === 1) end = { x: gridWidth - 1, y: Math.floor(Math.random() * gridHeight) };
+                    else if (edge === 2) end = { x: Math.floor(Math.random() * gridWidth), y: gridHeight - 1 };
+                    else end = { x: 0, y: Math.floor(Math.random() * gridHeight) };
+                } else {
+                    // Chip 2 to World
+                    start = c2.getPerimeterPoint();
+                    const edge = Math.floor(Math.random() * 4);
+                    if (edge === 0) end = { x: Math.floor(Math.random() * gridWidth), y: 0 };
+                    else if (edge === 1) end = { x: gridWidth - 1, y: Math.floor(Math.random() * gridHeight) };
+                    else if (edge === 2) end = { x: Math.floor(Math.random() * gridWidth), y: gridHeight - 1 };
+                    else end = { x: 0, y: Math.floor(Math.random() * gridHeight) };
+                }
+
+                // Try to create trace
+                const trace = new Trace(start, end);
+                if (trace.path) {
+                    traces.push(trace);
+                    created++;
+                }
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = '#050505';
+            ctx.fillRect(0, 0, width, height);
+
+            traces.forEach(t => t.draw());
+            chips.forEach(c => c.draw());
+
+            if (Math.random() < 0.15 && traces.length > 0) {
+                const randomTrace = traces[Math.floor(Math.random() * traces.length)];
+                packets.push(new Packet(randomTrace));
+            }
+
+            for (let i = packets.length - 1; i >= 0; i--) {
+                const p = packets[i];
+                const alive = p.update();
+                if (!alive) {
+                    packets.splice(i, 1);
+                } else {
+                    p.draw();
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        animate();
+
     </script>
 </body>
-</html>
+
 </html>

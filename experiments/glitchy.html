@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetroFrame - 80s-Inspired Photo Enhancement SaaS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            color: #222;
+            overflow-x: hidden;
+        }
+        .retro-border {
+            border: 4px solid #222;
+            box-shadow: 8px 8px 0px #222;
+        }
+        .horizontal-line {
+            height: 4px;
+            background: linear-gradient(90deg, #ffcc00, #ff3300, #0066cc);
+            margin: 2rem 0;
+        }
+        .kodak-yellow { background-color: #ffcc00; }
+        .kodak-red { background-color: #ff3300; }
+        .kodak-blue { background-color: #0066cc; }
+        .kodak-black { background-color: #222; }
+        .text-kodak-yellow { color: #ffcc00; }
+        .text-kodak-red { color: #ff3300; }
+        .text-kodak-blue { color: #0066cc; }
+        .text-kodak-black { color: #222; }
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        .pixel-grid {
+            background-image: 
+                linear-gradient(to right, #ddd 1px, transparent 1px),
+                linear-gradient(to bottom, #ddd 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .scan-line {
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            position: absolute;
+            width: 100%;
+            animation: scan 8s linear infinite;
+        }
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+        .glitch {
+            position: relative;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -1px 0 #ff3300;
+            animation: glitch-1 2s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: 1px 0 #0066cc;
+            animation: glitch-2 3s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-1 {
+            0% { clip: rect(24px, 550px, 90px, 0); }
+            5% { clip: rect(32px, 550px, 78px, 0); }
+            10% { clip: rect(19px, 550px, 82px, 0); }
+            15% { clip: rect(91px, 550px, 100px, 0); }
+            20% { clip: rect(53px, 550px, 69px, 0); }
+            25% { clip: rect(16px, 550px, 45px, 0); }
+            30% { clip: rect(88px, 550px, 30px, 0); }
+            35% { clip: rect(46px, 550px, 95px, 0); }
+            40% { clip: rect(22px, 550px, 59px, 0); }
+            45% { clip: rect(71px, 550px, 84px, 0); }
+            50% { clip: rect(38px, 550px, 27px, 0); }
+            55% { clip: rect(62px, 550px, 15px, 0); }
+            60% { clip: rect(13px, 550px, 77px, 0); }
+            65% { clip: rect(29px, 550px, 49px, 0); }
+            70% { clip: rect(85px, 550px, 61px, 0); }
+            75% { clip: rect(9px, 550px, 38px, 0); }
+            80% { clip: rect(44px, 550px, 52px, 0); }
+            85% { clip: rect(67px, 550px, 23px, 0); }
+            90% { clip: rect(31px, 550px, 88px, 0); }
+            95% { clip: rect(76px, 550px, 34px, 0); }
+            100% { clip: rect(18px, 550px, 70px, 0); }
+        }
+        @keyframes glitch-2 {
+            0% { clip: rect(65px, 550px, 99px, 0); }
+            5% { clip: rect(44px, 550px, 11px, 0); }
+            10% { clip: rect(23px, 550px, 87px, 0); }
+            15% { clip: rect(82px, 550px, 40px, 0); }
+            20% { clip: rect(51px, 550px, 66px, 0); }
+            25% { clip: rect(10px, 550px, 29px, 0); }
+            30% { clip: rect(77px, 550px, 55px, 0); }
+            35% { clip: rect(38px, 550px, 91px, 0); }
+            40% { clip: rect(62px, 550px, 17px, 0); }
+            45% { clip: rect(29px, 550px, 74px, 0); }
+            50% { clip: rect(88px, 550px, 33px, 0); }
+            55% { clip: rect(19px, 550px, 60px, 0); }
+            60% { clip: rect(71px, 550px, 25px, 0); }
+            65% { clip: rect(42px, 550px, 80px, 0); }
+            70% { clip: rect(13px, 550px, 47px, 0); }
+            75% { clip: rect(59px, 550px, 22px, 0); }
+            80% { clip: rect(34px, 550px, 68px, 0); }
+            85% { clip: rect(81px, 550px, 14px, 0); }
+            90% { clip: rect(26px, 550px, 53px, 0); }
+            95% { clip: rect(63px, 550px, 39px, 0); }
+            100% { clip: rect(48px, 550px, 85px, 0); }
+        }
+        .retro-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .retro-btn:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px #222;
+        }
+        .pixel {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+    </style>
+</head>
+<body class="relative">
+    <!-- Scan line effect -->
+    <div class="scan-line hidden md:block"></div>
+    
+    <!-- Navigation -->
+    <nav class="kodak-black text-white p-6 sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="font-orbitron text-2xl font-bold">
+                <span class="text-kodak-yellow">RETRO</span><span class="text-kodak-red">FRAME</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#features" class="hover:text-kodak-yellow transition-colors">FEATURES</a>
+                <a href="#pricing" class="hover:text-kodak-yellow transition-colors">PRICING</a>
+                <a href="#testimonials" class="hover:text-kodak-yellow transition-colors">TESTIMONIALS</a>
+                <a href="#contact" class="hover:text-kodak-yellow transition-colors">CONTACT</a>
+            </div>
+            <button class="retro-btn px-6 py-3 kodak-yellow text-kodak-black font-bold font-orbitron retro-border">
+                GET STARTED
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="container mx-auto px-4 py-16 md:py-24">
+        <div class="flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-12 md:mb-0">
+                <div class="horizontal-line w-1/3 mb-6"></div>
+                <h1 class="font-orbitron text-5xl md:text-7xl font-bold mb-6 glitch" data-text="DIGITAL MEMORIES, 80s STYLE">
+                    <span class="text-kodak-black">DIGITAL MEMORIES,</span> <span class="text-kodak-red">80s STYLE</span>
+                </h1>
+                <p class="text-xl mb-8 text-gray-700 max-w-2xl">
+                    Transform your photos with the bold colors and strong lines of 1980s Kodak aesthetics. Our AI-powered platform brings retro charm to your digital memories.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button class="retro-btn px-8 py-4 kodak-red text-white font-bold font-orbitron text-lg retro-border">
+                        <i class="fas fa-camera-retro mr-2"></i> UPLOAD PHOTO
+                    </button>
+                    <button class="retro-btn px-8 py-4 kodak-blue text-white font-bold font-orbitron text-lg retro-border">
+                        <i class="fas fa-play-circle mr-2"></i> WATCH DEMO
+                    </button>
+                </div>
+            </div>
+            <div class="md:w-1/2 relative">
+                <div class="retro-border p-2 kodak-yellow">
+                    <div class="retro-border p-4 bg-white">
+                        <div class="pixel-grid p-6">
+                            <div class="flex justify-center">
+                                <div class="w-48 h-48 kodak-red flex items-center justify-center retro-border mb-4">
+                                    <i class="fas fa-camera text-white text-6xl"></i>
+                                </div>
+                            </div>
+                            <div class="flex justify-between mb-4">
+                                <div class="w-20 h-20 kodak-blue retro-border"></div>
+                                <div class="w-20 h-20 kodak-yellow retro-border"></div>
+                                <div class="w-20 h-20 kodak-red retro-border"></div>
+                            </div>
+                            <div class="horizontal-line"></div>
+                            <div class="flex justify-center mt-4">
+                                <div class="w-32 h-8 kodak-black retro-border"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute -bottom-6 -right-6 w-32 h-32 kodak-blue retro-border -z-10"></div>
+                <div class="absolute -top-6 -left-6 w-24 h-24 kodak-red retro-border -z-10"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Horizontal Line Separator -->
+    <div class="horizontal-line my-4"></div>
+
+    <!-- Features Section -->
+    <section id="features" class="container mx-auto px-4 py-16">
+        <div class="text-center mb-12">
+            <h2 class="font-orbitron text-4xl md:text-5xl font-bold mb-4">
+                <span class="text-kodak-black">KODAK-INSPIRED</span> <span class="text-kodak-red">FEATURES</span>
+            </h2>
+            <p class="text-xl text-gray-700 max-w-3xl mx-auto">Experience the iconic 80s photography aesthetic with modern AI technology</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="retro-border p-6 bg-white">
+                <div class="w-16 h-16 kodak-yellow flex items-center justify-center retro-border mb-6">
+                    <i class="fas fa-palette text-2xl text-kodak-black"></i>
+                </div>
+                <h3 class="font-orbitron text-2xl font-bold mb-4 text-kodak-black">Bold Color Grading</h3>
+                <p class="text-gray-700 mb-4">Our AI applies authentic 1980s Kodak color profiles with vibrant reds, yellows, and blues that pop off the screen.</p>
+                <div class="horizontal-line"></div>
+                <div class="flex mt-4">
+                    <div class="w-8 h-8 kodak-red mr-2 retro-border"></div>
+                    <div class="w-8 h-8 kodak-yellow mr-2 retro-border"></div>
+                    <div class="w-8 h-8 kodak-blue mr-2 retro-border"></div>
+                    <div class="w-8 h-8 kodak-black retro-border"></div>
+                </div>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="retro-border p-6 bg-white">
+                <div class="w-16 h-16 kodak-red flex items-center justify-center retro-border mb-6">
+                    <i class="fas fa-grip-lines text-2xl text-white"></i>
+                </div>
+                <h3 class="font-orbitron text-2xl font-bold mb-4 text-kodak-black">Strong Horizontal Lines</h3>
+                <p class="text-gray-700 mb-4">Add dramatic horizontal elements and geometric patterns reminiscent of 80s design aesthetics to your images.</p>
+                <div class="horizontal-line"></div>
+                <div class="mt-4">
+                    <div class="h-2 kodak-yellow mb-2"></div>
+                    <div class="h-2 kodak-red mb-2"></div>
+                    <div class="h-2 kodak-blue"></div>
+                </div>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="retro-border p-6 bg-white">
+                <div class="w-16 h-16 kodak-blue flex items-center justify-center retro-border mb-6">
+                    <i class="fas fa-magic text-2xl text-white"></i>
+                </div>
+                <h3 class="font-orbitron text-2xl font-bold mb-4 text-kodak-black">AI-Powered Filters</h3>
+                <p class="text-gray-700 mb-4">Transform any photo into a retro masterpiece with our collection of 80s-inspired filters and effects.</p>
+                <div class="horizontal-line"></div>
+                <div class="mt-4">
+                    <button class="retro-btn px-4 py-2 kodak-black text-white text-sm font-orbitron">
+                        TRY FILTERS <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="kodak-black text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="font-orbitron text-4xl md:text-5xl font-bold mb-4">
+                    <span class="text-kodak-yellow">RETRO</span> <span class="text-white">PRICING</span>
+                </h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">Simple, transparent pricing for all your 80s photo enhancement needs</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- Basic Plan -->
+                <div class="retro-border p-8 bg-gray-900">
+                    <div class="horizontal-line mb-6"></div>
+                    <h3 class="font-orbitron text-2xl font-bold mb-4 text-kodak-yellow">BASIC</h3>
+                    <div class="mb-6">
+                        <span class="text-5xl font-bold">$9</span>
+                        <span class="text-gray-400">/month</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center"><i class="fas fa-check text-kodak-yellow mr-3"></i> 50 retro filters</li>
+                        <li class="flex items-center"><i class="fas fa-check text-kodak-yellow mr-3"></i> 100 photos/month</li>
+                        <li class="flex items-center"><i class="fas fa-check text-kodak-yellow mr-3"></i> Basic color grading</li>
+                        <li class="flex items-center"><i class="fas fa-times text-gray-500 mr-3"></i> No AI enhancement</li>
+                        <li class="flex items-center"><i class="fas fa-times text-gray-500 mr-3"></i> No batch processing</li>
+                    </ul>
+                    <button class="retro-btn w-full py-3 kodak-yellow text-kodak-black font-bold font-orbitron retro-border">
+                        GET STARTED
+                    </button>
+                </div>
+                
+                <!-- Pro Plan -->
+                <div class="retro-border p-8 bg-gray-800 relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="px-4 py-2 kodak-red text-white font-orbitron text-sm retro-border">MOST POPULAR</span>
+                    </div>
+                    <div class="horizontal-line mb-6"></div>
+                    <h3 class="font-orbitron text-2xl font-bold mb-4 text-kodak-red">PRO</h3>
+                    <div class="mb-6">
+                        <span class="text-5xl font-bold">$19</span>
+                        <span class="text-gray-400">/month</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center"><i class="fas fa-check text-kodak-red mr-3"></i> 200+ retro filters</li>
+                        <li class="flex items-center"><i class="fas fa-check text-kodak-red mr-3"></i> 500 photos/month</li>
+                        <li class="flex items-center"><i class="fas fa-check text-kodak-red mr-3"></i> Advanced color grading</li>
+                        <li class="flex items-center"><i class="fas fa-check text-kodak-red mr-3"></i> AI enhancement</li>
+                        <li class="flex items-center"><i class="fas fa-times text-gray-500 mr-3"></i> Limited batch processing</li>
+                    </ul>
+                    <button class="retro-btn w-full py-3 kodak-red text-white font-bold font-orbitron retro-border">
+                        GET STARTED
+                    </button>
+                </div>
+                
+                <!-- Enterprise Plan -->
+                <div class="retro-border p-8 bg-gray-900">
+                    <div class="horizontal-line mb-6"></div>
+                    <h3 class="font-orbitron text-2xl font-bold mb-4 text-kodak-blue">ENTERPRISE</h3>
+                    <div class="mb-6">
+                        <span class="text-5xl font-bold">$49</span>
+                        <span class="text-gray-400">/month</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center"><i class="fas fa-check text-kodak-blue mr-3"></i> All retro filters</li>
+                        <li class="flex items-center"><i class="fas fa-check text-kodak-blue mr-3"></i> Unlimited photos</li>
+                        <li class="flex items-center"><i class="fas fa-check text-kodak-blue mr-3"></i> Professional color grading</li>
+                        <li class="flex items-center"><i class="fas fa-check text-kodak-blue mr-3"></i> Advanced AI enhancement</li>
+                        <li class="flex items-center"><i class="fas fa-check text-kodak-blue mr-3"></i> Batch processing</li>
+                    </ul>
+                    <button class="retro-btn w-full py-3 kodak-blue text-white font-bold font-orbitron retro-border">
+                        GET STARTED
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="container mx-auto px-4 py-16">
+        <div class="text-center mb-12">
+            <h2 class="font-orbitron text-4xl md:text-5xl font-bold mb-4">
+                <span class="text-kodak-black">RETRO</span> <span class="text-kodak-red">TESTIMONIALS</span>
+            </h2>
+            <p class="text-xl text-gray-700 max-w-3xl mx-auto">What photographers are saying about RetroFrame</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <!-- Testimonial 1 -->
+            <div class="retro-border p-6 bg-white">
+                <div class="flex items-center mb-6">
+                    <div class="w-16 h-16 kodak-yellow retro-border mr-4 flex items-center justify-center">
+                        <i class="fas fa-user text-2xl text-kodak-black"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-orbitron text-xl font-bold">Mike "VHS" Johnson</h4>
+                        <p class="text-gray-600">Professional Photographer</p>
+                    </div>
+                </div>
+                <p class="text-gray-700 italic mb-4">"RetroFrame brought my childhood memories to life with authentic 80s Kodak colors. The horizontal line feature is a game-changer!"</p>
+                <div class="horizontal-line"></div>
+                <div class="flex text-kodak-yellow mt-4">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+            </div>
+            
+            <!-- Testimonial 2 -->
+            <div class="retro-border p-6 bg-white">
+                <div class="flex items-center mb-6">
+                    <div class="w-16 h-16 kodak-red retro-border mr-4 flex items-center justify-center">
+                        <i class="fas fa-user text-2xl text-white"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-orbitron text-xl font-bold">Sarah Thompson</h4>
+                        <p class="text-gray-600">Wedding Photographer</p>
+                    </div>
+                </div>
+                <p class="text-gray-700 italic mb-4">"My clients love the retro wedding photos. The bold color grading makes every moment look like it's from an 80s romance film."</p>
+                <div class="horizontal-line"></div>
+                <div class="flex text-kodak-yellow mt-4">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact CTA -->
+    <section id="contact" class="container mx-auto px-4 py-16">
+        <div class="retro-border p-8 md:p-12 bg-white max-w-4xl mx-auto">
+            <div class="text-center mb-8">
+                <h2 class="font-orbitron text-4xl md:text-5xl font-bold mb-4">
+                    <span class="text-kodak-black">READY FOR</span> <span class="text-kodak-red">RETRO?</span>
+                </h2>
+                <p class="text-xl text-gray-700">Join thousands of photographers transforming their work with 80s aesthetics</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <form id="contact-form" class="space-y-6">
+                        <div>
+                            <label class="block font-orbitron font-bold mb-2 text-kodak-black">NAME</label>
+                            <input type="text" class="w-full p-3 border-2 border-black focus:outline-none focus:border-kodak-yellow" placeholder="Enter your name">
+                        </div>
+                        <div>
+                            <label class="block font-orbitron font-bold mb-2 text-kodak-black">EMAIL</label>
+                            <input type="email" class="w-full p-3 border-2 border-black focus:outline-none focus:border-kodak-red" placeholder="Enter your email">
+                        </div>
+                        <div>
+                            <label class="block font-orbitron font-bold mb-2 text-kodak-black">MESSAGE</label>
+                            <textarea class="w-full p-3 border-2 border-black focus:outline-none focus:border-kodak-blue" rows="4" placeholder="Tell us about your retro vision..."></textarea>
+                        </div>
+                        <button type="submit" class="retro-btn w-full py-4 kodak-black text-white font-bold font-orbitron text-lg retro-border">
+                            SEND MESSAGE <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <div class="mb-8">
+                        <h3 class="font-orbitron text-2xl font-bold mb-4 text-kodak-black">CONTACT INFO</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 kodak-yellow flex items-center justify-center retro-border mr-4">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <span class="font-orbitron">1-800-RETRO-80</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 kodak-red flex items-center justify-center retro-border mr-4">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <span class="font-orbitron">hello@retroframe.com</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 kodak-blue flex items-center justify-center retro-border mr-4">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <span class="font-orbitron">1980 Memory Lane, Retro City</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="horizontal-line"></div>
+                    <div class="mt-8">
+                        <h4 class="font-orbitron text-xl font-bold mb-4 text-kodak-black">FOLLOW US</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-12 h-12 kodak-yellow flex items-center justify-center retro-border">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 kodak-red flex items-center justify-center retro-border">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 kodak-blue flex items-center justify-center retro-border">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 kodak-black flex items-center justify-center retro-border">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="kodak-black text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-8 md:mb-0">
+                    <div class="font-orbitron text-3xl font-bold mb-4">
+                        <span class="text-kodak-yellow">RETRO</span><span class="text-kodak-red">FRAME</span>
+                    </div>
+                    <p class="text-gray-400 max-w-md">Bringing 1980s Kodak aesthetics to the digital age with bold colors and strong horizontal lines.</p>
+                </div>
+                <div class="text-center md:text-right">
+                    <div class="horizontal-line mb-6"></div>
+                    <p class="text-gray-400">&copy; 2023 RetroFrame. All rights reserved.</p>
+                    <p class="text-gray-400 mt-2">A nostalgic trip to the 80s, powered by AI.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Simple form submission handling
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = this.querySelector('input[type="text"]').value;
+            const email = this.querySelector('input[type="email"]').value;
+            const message = this.querySelector('textarea').value;
+            
+            // Simple validation
+            if (!name || !email || !message) {
+                alert('Please fill in all fields!');
+                return;
+            }
+            
+            // In a real app, you would send this to a server
+            alert(`Thanks ${name}! Your retro message has been sent. We'll get back to you soon at ${email}.`);
+            
+            // Reset form
+            this.reset();
+        });
+        
+        // Retro button click effects
+        document.querySelectorAll('.retro-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Add a click effect
+                this.style.transform = 'translate(0px, 0px)';
+                this.style.boxShadow = '4px 4px 0px #222';
+                
+                setTimeout(() => {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                }, 200);
+                
+                // If it's a "Get Started" button, show a message
+                if (this.textContent.includes('GET STARTED')) {
+                    alert('Welcome to RetroFrame! Get ready for an 80s aesthetic journey.');
+                }
+            });
+        });
+        
+        // Add scan line effect on larger screens
+        function initScanLine() {
+            const scanLine = document.querySelector('.scan-line');
+            if (window.innerWidth >= 768) {
+                scanLine.style.display = 'block';
+            } else {
+                scanLine.style.display = 'none';
+            }
+        }
+        
+        window.addEventListener('resize', initScanLine);
+        initScanLine();
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Add some retro console log
+        console.log('%c RETROFRAME - 80s AESTHETICS LOADED ', 'background: #ffcc00; color: #222; font-size: 16px; font-family: monospace; font-weight: bold;');
+        console.log('%c Bold colors and strong horizontal lines activated! ', 'background: #ff3300; color: white; font-size: 14px; font-family: monospace;');
+    </script>
+</body>
+</html>
