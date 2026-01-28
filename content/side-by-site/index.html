@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Side-by-Site | LucidBox</title>
+    <link rel="preconnect" href="https://api.fontshare.com">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Primary */
+            --color-lucid-blue: #001AFF;
+            --color-midnight: #0E2032;
+            --color-horizon-green: #01FFA6;
+
+            /* Greys */
+            --color-grey-100: #EEEEEE;
+            --color-grey-200: #E7E7E7;
+            --color-grey-300: #E1E1E1;
+            --color-grey-400: #DADADA;
+            --color-grey-500: #D4D4D4;
+            --color-grey-600: #CDCDCD;
+
+            /* Dark Blues */
+            --color-dark-blue-100: #0B253E;
+            --color-dark-blue-200: #08294A;
+            --color-dark-blue-300: #062E55;
+            --color-dark-blue-400: #033261;
+            --color-dark-blue-500: #00376D;
+
+            /* Typography */
+            --font-primary: 'PP Fraktion Mono', 'JetBrains Mono', monospace;
+            --font-secondary: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: var(--font-secondary);
+            padding: 24px;
+            background-color: var(--color-grey-100);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: var(--color-midnight);
+            font-family: var(--font-primary);
+            font-weight: 500;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+        }
+        .input-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-group label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--color-midnight);
+            font-family: var(--font-primary);
+            font-size: 0.875rem;
+            letter-spacing: 0.02em;
+        }
+        .input-mode-toggle {
+            display: flex;
+            gap: 0;
+            margin-bottom: 8px;
+        }
+        .input-mode-toggle button {
+            padding: 5px 12px;
+            border: 1px solid var(--color-grey-400);
+            background-color: white;
+            color: var(--color-midnight);
+            font-family: var(--font-primary);
+            font-size: 11px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .input-mode-toggle button:first-child {
+            border-radius: 4px 0 0 4px;
+            border-right: none;
+        }
+        .input-mode-toggle button:last-child {
+            border-radius: 0 4px 4px 0;
+        }
+        .input-mode-toggle button.active {
+            background-color: var(--color-lucid-blue);
+            border-color: var(--color-lucid-blue);
+            color: white;
+        }
+        textarea, input[type="url"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--color-grey-400);
+            border-radius: 4px;
+            font-family: var(--font-primary);
+            font-size: 13px;
+            background-color: white;
+            color: var(--color-midnight);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        textarea {
+            height: 200px;
+            resize: vertical;
+        }
+        textarea::placeholder, input[type="url"]::placeholder {
+            color: var(--color-grey-600);
+        }
+        textarea:focus, input[type="url"]:focus {
+            outline: none;
+            border-color: var(--color-lucid-blue);
+            box-shadow: 0 0 0 3px rgba(0, 26, 255, 0.2);
+        }
+        .fetch-error {
+            color: #cc0000;
+            font-size: 12px;
+            margin-top: 4px;
+            font-family: var(--font-primary);
+        }
+        .compare-btn {
+            display: block;
+            margin: 0 auto 24px auto;
+            padding: 12px 32px;
+            background-color: var(--color-lucid-blue);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: var(--font-primary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            letter-spacing: 0.02em;
+        }
+        .compare-btn:hover {
+            background-color: #0014cc;
+            transform: translateY(-1px);
+        }
+        .compare-btn:active {
+            transform: translateY(0);
+        }
+        .output-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .output-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .output-group label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--color-midnight);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-primary);
+            font-size: 0.875rem;
+        }
+        .legend-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        .legend-red {
+            background-color: rgba(255, 77, 77, 0.2);
+            border: 1px solid #ff4d4d;
+        }
+        .legend-green {
+            background-color: rgba(1, 255, 166, 0.2);
+            border: 1px solid var(--color-horizon-green);
+        }
+        .output-pane {
+            background-color: white;
+            border: 1px solid var(--color-grey-400);
+            border-radius: 4px;
+            min-height: 100px;
+            height: 400px;
+            width: 100%;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 32px;
+            padding: 20px;
+            color: var(--color-midnight);
+            font-size: 0.875rem;
+            font-family: var(--font-primary);
+        }
+        .footer a {
+            color: var(--color-lucid-blue);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer a:hover {
+            color: #0014cc;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Side-by-Site</h1>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label>Original:</label>
+                <div class="input-mode-toggle">
+                    <button class="active" onclick="setSideMode('left', 'url', this)">URL</button>
+                    <button onclick="setSideMode('left', 'html', this)">HTML</button>
+                </div>
+                <div id="left-url-input">
+                    <input type="url" id="url1" placeholder="https://example.com">
+                    <div id="url1-error" class="fetch-error"></div>
+                </div>
+                <div id="left-html-input" style="display: none;">
+                    <textarea id="html1" placeholder="Paste HTML here..."></textarea>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Modified:</label>
+                <div class="input-mode-toggle">
+                    <button class="active" onclick="setSideMode('right', 'url', this)">URL</button>
+                    <button onclick="setSideMode('right', 'html', this)">HTML</button>
+                </div>
+                <div id="right-url-input">
+                    <input type="url" id="url2" placeholder="https://example.com">
+                    <div id="url2-error" class="fetch-error"></div>
+                </div>
+                <div id="right-html-input" style="display: none;">
+                    <textarea id="html2" placeholder="Paste HTML here..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <button class="compare-btn" onclick="runCompare()">Compare</button>
+
+        <div class="output-section">
+            <div class="output-group">
+                <label for="output1">
+                    Left (Original)
+                    <span class="legend-box legend-red"></span>
+                    deletions
+                </label>
+                <iframe id="output1" class="output-pane"></iframe>
+            </div>
+            <div class="output-group">
+                <label for="output2">
+                    Right (Modified)
+                    <span class="legend-box legend-green"></span>
+                    additions
+                </label>
+                <iframe id="output2" class="output-pane"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        A creation of <a href="https://lucidbox.ca" target="_blank" rel="noopener noreferrer">LucidBox</a>
+    </footer>
+
+    <script>
+        // URL encoding/decoding for sharing
+        function encodeForURL(str) {
+            // Use encodeURIComponent + btoa for Unicode-safe base64
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+
+        function decodeFromURL(str) {
+            try {
+                return decodeURIComponent(escape(atob(str)));
+            } catch (e) {
+                return '';
+            }
+        }
+
+        function updateURL() {
+            const params = new URLSearchParams();
+
+            ['left', 'right'].forEach(side => {
+                const idx = side === 'left' ? '1' : '2';
+                params.set(side + '_mode', sideMode[side]);
+                if (sideMode[side] === 'url') {
+                    params.set(side, document.getElementById('url' + idx).value);
+                } else {
+                    params.set(side, encodeForURL(document.getElementById('html' + idx).value));
+                }
+            });
+
+            const newURL = window.location.pathname + '?' + params.toString();
+            history.replaceState(null, '', newURL);
+        }
+
+        function loadFromURL() {
+            const params = new URLSearchParams(window.location.search);
+
+            ['left', 'right'].forEach(side => {
+                const idx = side === 'left' ? '1' : '2';
+                const mode = params.get(side + '_mode') || 'html';
+                const value = params.get(side);
+                if (!value) return;
+
+                // Click the correct toggle button
+                const toggles = document.querySelectorAll('.input-group')[side === 'left' ? 0 : 1]
+                    .querySelector('.input-mode-toggle')
+                    .querySelectorAll('button');
+                const btn = mode === 'url' ? toggles[0] : toggles[1];
+                btn.click();
+
+                if (mode === 'url') {
+                    document.getElementById('url' + idx).value = value;
+                } else {
+                    document.getElementById('html' + idx).value = decodeFromURL(value);
+                }
+            });
+        }
+
+        // Get all text nodes from an element
+        function getTextNodes(element) {
+            const textNodes = [];
+            const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+            let node;
+            while (node = walker.nextNode()) {
+                textNodes.push(node);
+            }
+            return textNodes;
+        }
+
+        // Extract text node contents as array
+        function extractTextNodes(html) {
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            return getTextNodes(temp).map(n => n.textContent);
+        }
+
+        // LCS-based diff at text-node level
+        function diffTextNodes(oldNodes, newNodes) {
+            const m = oldNodes.length;
+            const n = newNodes.length;
+
+            // Build LCS matrix
+            const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+
+            for (let i = 1; i <= m; i++) {
+                for (let j = 1; j <= n; j++) {
+                    if (oldNodes[i - 1] === newNodes[j - 1]) {
+                        dp[i][j] = dp[i - 1][j - 1] + 1;
+                    } else {
+                        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                    }
+                }
+            }
+
+            // Backtrack to find diff
+            let i = m, j = n;
+            const result = [];
+
+            while (i > 0 || j > 0) {
+                if (i > 0 && j > 0 && oldNodes[i - 1] === newNodes[j - 1]) {
+                    result.unshift({ type: 'same', value: oldNodes[i - 1] });
+                    i--;
+                    j--;
+                } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
+                    result.unshift({ type: 'add', value: newNodes[j - 1] });
+                    j--;
+                } else {
+                    result.unshift({ type: 'delete', value: oldNodes[i - 1] });
+                    i--;
+                }
+            }
+
+            return result;
+        }
+
+        // Escape special chars for HTML
+        function escapeForHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // Apply diff to HTML by marking entire text nodes
+        function applyDiffToHTML(html, diffResult, side) {
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            const textNodes = getTextNodes(temp);
+
+            // Build list of text node values for this side
+            const sideNodes = [];
+            diffResult.forEach(part => {
+                if (side === 'left') {
+                    if (part.type === 'same' || part.type === 'delete') {
+                        sideNodes.push({ value: part.value, tag: part.type === 'delete' ? 'del' : null });
+                    }
+                } else {
+                    if (part.type === 'same' || part.type === 'add') {
+                        sideNodes.push({ value: part.value, tag: part.type === 'add' ? 'ins' : null });
+                    }
+                }
+            });
+
+            // Replace each text node with marked version
+            textNodes.forEach((node, index) => {
+                if (index < sideNodes.length) {
+                    const { tag } = sideNodes[index];
+                    if (tag) {
+                        const wrapper = document.createElement(tag);
+                        wrapper.textContent = node.textContent;
+                        node.replaceWith(wrapper);
+                    }
+                }
+            });
+
+            return temp.innerHTML;
+        }
+
+        // Write content to an iframe with diff styles
+        function writeToIframe(iframeId, content) {
+            const iframe = document.getElementById(iframeId);
+            const doc = iframe.contentDocument || iframe.contentWindow.document;
+            doc.open();
+            doc.write(`
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 16px;
+            margin: 0;
+            line-height: 1.6;
+            color: #0E2032;
+            background-color: white;
+        }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-left: 1.5em; margin-bottom: 1em; }
+        li { margin-bottom: 0.25em; }
+        del {
+            background-color: rgba(255, 77, 77, 0.25);
+            color: #cc0000;
+            text-decoration: line-through;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+        ins {
+            background-color: rgba(1, 255, 166, 0.3);
+            color: #006644;
+            text-decoration: none;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+        .empty-placeholder {
+            color: #CDCDCD;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>${content}</body>
+</html>
+            `);
+            doc.close();
+        }
+
+        // Per-side input mode: { left: 'url'|'html', right: 'url'|'html' }
+        const sideMode = { left: 'url', right: 'url' };
+
+        function setSideMode(side, mode, clickedBtn) {
+            sideMode[side] = mode;
+            document.getElementById(side + '-url-input').style.display = mode === 'url' ? '' : 'none';
+            document.getElementById(side + '-html-input').style.display = mode === 'html' ? '' : 'none';
+            // Update toggle buttons
+            const toggle = clickedBtn.parentElement;
+            toggle.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+            clickedBtn.classList.add('active');
+        }
+
+        // Fetch HTML from a URL via a CORS proxy
+        async function fetchHTML(url) {
+            try {
+                const resp = await fetch(url);
+                if (resp.ok) return await resp.text();
+            } catch (e) {
+                // CORS blocked, try proxy
+            }
+            const proxyURL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+            const resp = await fetch(proxyURL);
+            if (!resp.ok) throw new Error('Failed to fetch URL');
+            return await resp.text();
+        }
+
+        // Resolve one side's HTML (fetch URL or read textarea)
+        async function resolveHTML(side) {
+            const idx = side === 'left' ? '1' : '2';
+            const errorEl = document.getElementById('url' + idx + '-error');
+            errorEl.textContent = '';
+
+            if (sideMode[side] === 'html') {
+                return document.getElementById('html' + idx).value;
+            }
+
+            const url = document.getElementById('url' + idx).value.trim();
+            if (!url) {
+                errorEl.textContent = 'Please enter a URL';
+                return '';
+            }
+            try {
+                return await fetchHTML(url);
+            } catch (e) {
+                errorEl.textContent = 'Failed to fetch URL';
+                return '';
+            }
+        }
+
+        // Main comparison function
+        function compareHTML(html1, html2) {
+            const textNodes1 = extractTextNodes(html1);
+            const textNodes2 = extractTextNodes(html2);
+
+            let leftHTML = '';
+            let rightHTML = '';
+
+            if (textNodes1.length === 0 && textNodes2.length === 0) {
+                leftHTML = '<span class="empty-placeholder">No content to compare</span>';
+                rightHTML = '<span class="empty-placeholder">No content to compare</span>';
+            } else {
+                const diffResult = diffTextNodes(textNodes1, textNodes2);
+                leftHTML = applyDiffToHTML(html1, diffResult, 'left');
+                rightHTML = applyDiffToHTML(html2, diffResult, 'right');
+            }
+
+            writeToIframe('output1', leftHTML);
+            writeToIframe('output2', rightHTML);
+
+            setTimeout(setupScrollSync, 20);
+        }
+
+        async function runCompare() {
+            const btn = document.querySelector('.compare-btn');
+            const needsFetch = sideMode.left === 'url' || sideMode.right === 'url';
+
+            if (needsFetch) {
+                btn.textContent = 'Fetching...';
+                btn.disabled = true;
+            }
+
+            try {
+                const [html1, html2] = await Promise.all([
+                    resolveHTML('left'),
+                    resolveHTML('right'),
+                ]);
+                compareHTML(html1, html2);
+                updateURL();
+            } finally {
+                btn.textContent = 'Compare';
+                btn.disabled = false;
+            }
+        }
+
+        // Synchronize scrolling between iframes
+        let isSyncing = false;
+
+        function syncScroll(sourceId, targetId) {
+            const sourceIframe = document.getElementById(sourceId);
+            const targetIframe = document.getElementById(targetId);
+
+            const sourceDoc = sourceIframe.contentDocument || sourceIframe.contentWindow.document;
+            const targetDoc = targetIframe.contentDocument || targetIframe.contentWindow.document;
+
+            const sourceWin = sourceIframe.contentWindow;
+            const targetWin = targetIframe.contentWindow;
+
+            sourceWin.addEventListener('scroll', function() {
+                if (isSyncing) return;
+                isSyncing = true;
+
+                // Calculate scroll percentage
+                const scrollTop = sourceWin.scrollY;
+                const scrollLeft = sourceWin.scrollX;
+
+                targetWin.scrollTo(scrollLeft, scrollTop);
+
+                setTimeout(() => { isSyncing = false; }, 10);
+            });
+        }
+
+        function setupScrollSync() {
+            syncScroll('output1', 'output2');
+            syncScroll('output2', 'output1');
+        }
+
+        // Run comparison when page loads
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('left') || params.get('right')) {
+                loadFromURL();
+                runCompare();
+            }
+        };
+    </script>
+</body>
+</html>

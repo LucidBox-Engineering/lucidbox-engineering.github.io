@@ -12,11 +12,13 @@ TIMEZONE = "America/Edmonton"
 DEFAULT_LANG = "en"
 DEFAULT_DATE_FORMAT = "%Y-%m-%d"
 
-STATIC_PATHS = ["images", "extra/CNAME", "images/favicon/favicon.ico"]
+STATIC_PATHS = ["images", "extra/CNAME", "images/favicon/favicon.ico", "side-by-site"]
 EXTRA_PATH_METADATA = {
     "extra/CNAME": {"path": "CNAME"},
     "images/favicon/favicon.ico": {"path": "favicon.ico"},
 }
+ARTICLE_EXCLUDES = STATIC_PATHS + [
+]
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
