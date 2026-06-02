@@ -661,7 +661,7 @@ footer textarea {
 
 .bios {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr;
 	gap: 8em;
 	margin-bottom: 10em;
 	margin-top: 10em;
@@ -671,6 +671,8 @@ footer textarea {
 	display: flex;
 	flex-direction: column;
 	gap: 2em;
+  max-width: 60%;
+  margin: auto;
 }
 
 .bio-header {
